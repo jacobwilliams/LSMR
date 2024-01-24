@@ -1,0 +1,21 @@
+name = "LSMR"
+version = "0.1.0"
+license = "license"
+author = "Jacob Williams"
+copyright = "Copyright 2024, Jacob Williams"
+
+[build]
+auto-executables = true
+auto-tests = true
+auto-examples = true
+module-naming = false
+link = ["lapack", "blas"]
+
+[install]
+library = true
+
+[fortran]
+implicit-typing = false
+implicit-external = false
+source-form = "free"
+
