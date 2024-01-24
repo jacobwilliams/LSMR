@@ -5,8 +5,59 @@
 !        dcopy, ddot, dnrm2, dscal
 !     required by subroutines LSMR and Acheck.
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!
-!! DCOPY copies a vector X to a vector Y.
+
+   module lsmrblas
+
+      use lsmrDataModule, only : ip => lsmr_ip, wp => lsmr_wp
+
+      implicit none
+
+      private
+
+      public :: ddot, dnrm2, dscal, dcopy
+
+#ifdef HAS_BLAS
+
+   ! get BLAS from an externally-linked library (double precision only)
+
+   interface
+
+      function ddot  (n,dx,incx,dy,incy)
+         implicit none
+         integer, intent(in)          :: n,incx,incy
+         double precision, intent(in) :: dx(*),dy(*)
+         double precision             :: ddot
+      end function ddot
+
+      function dnrm2 (n,dx,incx)
+         implicit none
+         integer, intent(in)          :: n,incx
+         double precision, intent(in) :: dx(*)
+         double precision             :: dnrm2
+      end function dnrm2
+
+      subroutine dscal (n,sa,x,incx)
+         implicit none
+         integer, intent(in)             :: n,incx
+         double precision, intent(in)    :: sa
+         double precision, intent(inout) :: x(*)
+      end subroutine dscal
+
+      subroutine dcopy(n,dx,incx,dy,incy)
+         implicit none
+         double precision dx(*),dy(*)
+         integer i,incx,incy,ix,iy,m,n
+      end subroutine dcopy
+
+   end interface
+
+
+#else
+
+   contains
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! DCOPY copies a vector X to a vector Y.
 !
 !  Discussion:
 !    This routine uses double precision real arithmetic.
@@ -28,29 +79,16 @@
 !    LC: QA214.L56.
 !
 !    Charles Lawson, Richard Hanson, David Kincaid, Fred Krogh,
-!    Algorithm 539, 
+!    Algorithm 539,
 !    Basic Linear Algebra Subprograms for Fortran Usage,
-!    ACM Transactions on Mathematical Software, 
+!    ACM Transactions on Mathematical Software,
 !    Volume 5, Number 3, September 1979, pages 308-323.
-!
-!  Parameters:
-!
-!    Input, integer N, the number of elements in DX and DY.
-!
-!    Input, real ( kind = 8 ) DX(*), the first vector.
-!
-!    Input, integer INCX, the increment between successive entries of DX.
-!
-!    Output, real ( kind = 8 ) DY(*), the second vector.
-!
-!    Input, integer INCY, the increment between successive entries of DY.
 
-
-      subroutine  dcopy(n,dx,incx,dy,incy)
+      subroutine dcopy(n,dx,incx,dy,incy)
 
       implicit none
-      double precision dx(*),dy(*)
-      integer i,incx,incy,ix,iy,m,n
+      real(wp) dx(*),dy(*)
+      integer(ip) i,incx,incy,ix,iy,m,n
 
       if ( n <= 0 ) then
          return
@@ -94,7 +132,7 @@
               iy = iy + incy
            end do
         end if
-        return
+
 end subroutine dcopy
 
 
@@ -122,9 +160,9 @@ end subroutine dcopy
 !    LC: QA214.L56.
 !
 !    Charles Lawson, Richard Hanson, David Kincaid, Fred Krogh,
-!    Algorithm 539, 
+!    Algorithm 539,
 !    Basic Linear Algebra Subprograms for Fortran Usage,
-!    ACM Transactions on Mathematical Software, 
+!    ACM Transactions on Mathematical Software,
 !    Volume 5, Number 3, September 1979, pages 308-323.
 !
 !  Parameters:
@@ -139,21 +177,18 @@ end subroutine dcopy
 !
 !    Input, integer INCY, the increment between successive entries in DY.
 !
-!    Output, real ( kind = 8 ) DDOT, the sum of the product of the 
+!    Output, real ( kind = 8 ) DDOT, the sum of the product of the
 !    corresponding entries of DX and DY.
 
 
       double precision function ddot(n,dx,incx,dy,incy)
 
-      implicit         none
-      double precision dx(*),dy(*),dtemp
-      integer          i,incx,incy,ix,iy,m,n
+      real(wp)    dx(*),dy(*),dtemp
+      integer(ip) i,incx,incy,ix,iy,m,n
 
-      ddot = 0.0d0
-      dtemp = 0.0d0
-      if ( n <= 0 ) then
-         return
-      end if
+      ddot = 0.0_wp
+      dtemp = 0.0_wp
+      if ( n <= 0 ) return
 
 !  Code for unequal increments or equal increments
 !  not equal to 1.
@@ -196,7 +231,7 @@ end subroutine dcopy
         end if
 
         ddot = dtemp
-        return
+
 end function ddot
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -224,7 +259,7 @@ end function ddot
 !    LC: QA214.L56.
 !
 !    Charles Lawson, Richard Hanson, David Kincaid, Fred Krogh,
-!    Algorithm 539, 
+!    Algorithm 539,
 !    Basic Linear Algebra Subprograms for Fortran Usage,
 !    ACM Transactions on Mathematical Software,
 !    Volume 5, Number 3, September 1979, pages 308-323.
@@ -240,24 +275,23 @@ end function ddot
 !    Output, real ( kind = 8 ) DNRM2, the Euclidean norm of X.
 !
 
-      double precision function dnrm2 ( n, x, incx)
-      implicit         none
-      integer          ix,n,incx
-      double precision x(*), ssq,absxi,norm,scale
+      real(wp) function dnrm2 ( n, x, incx)
+      integer(ip) ix,n,incx
+      real(wp)    x(*), ssq,absxi,norm,scale
 
       if ( n < 1 .or. incx < 1 ) then
-         norm  = 0.d0
+         norm  = 0.0_wp
       else if ( n == 1 ) then
          norm  = abs ( x(1) )
       else
-         scale = 0.d0
-         ssq = 1.d0
+         scale = 0.0_wp
+         ssq = 1.0_wp
 
          do ix = 1, 1 + ( n - 1 )*incx, incx
-            if ( x(ix) /= 0.d0 ) then
+            if ( x(ix) /= 0.0_wp ) then
                absxi = abs ( x(ix) )
                if ( scale < absxi ) then
-                  ssq = 1.d0 + ssq * ( scale / absxi )**2
+                  ssq = 1.0_wp + ssq * ( scale / absxi )**2
                   scale = absxi
                else
                   ssq = ssq + ( absxi / scale )**2
@@ -268,7 +302,7 @@ end function ddot
       end if
 
       dnrm2 = norm
-      return
+
 end function dnrm2
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -293,7 +327,7 @@ end function dnrm2
 !    LC: QA214.L56.
 !
 !    Charles Lawson, Richard Hanson, David Kincaid, Fred Krogh,
-!    Algorithm 539, 
+!    Algorithm 539,
 !    Basic Linear Algebra Subprograms for Fortran Usage,
 !    ACM Transactions on Mathematical Software,
 !    Volume 5, Number 3, September 1979, pages 308-323.
@@ -311,15 +345,13 @@ end function dnrm2
 
       subroutine  dscal(n,sa,x,incx)
 
-      implicit none
-
-      integer i
-      integer incx
-      integer ix
-      integer m
-      integer n
-      double precision sa
-      double precision x(*)
+      integer(ip) i
+      integer(ip) incx
+      integer(ip) ix
+      integer(ip) m
+      integer(ip) n
+      real(wp)    sa
+      real(wp)    x(*)
 
       if ( n <= 0 ) then
          return
@@ -348,6 +380,9 @@ end function dnrm2
 
       end if
 
-      return
 end subroutine dscal
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+#endif
+
+end module lsmrblas
