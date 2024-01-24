@@ -13,7 +13,7 @@
 
 program lsmrTestProgram
 
-  use   lsmrDataModule, only : ip, dp
+  use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
   use   lsmrTestModule, only : lsmrtest
   implicit none
 

@@ -20,23 +20,37 @@
 !              "done" would be dreadful, so now they are dpone, etc.
 ! 31 Jan 2014: Remove various versions of zero and one.
 !              Other routines declare them locally as needed.
+! JW : 1/24/2024 : rewrote this module
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 module lsmrDataModule
 
+  use iso_fortran_env
+
   implicit none
 
-  public
+  private
 
 ! intrinsic                   ::      selected_real_kind
 ! integer,  parameter, public :: dp = selected_real_kind(15)
 ! real(dp), parameter, public :: zero = 0.0_dp, one = 1.0_dp
 ! The above seems too obscure.
 
-  integer(4),  parameter :: ip = 4
-  integer(4),  parameter :: sp = 4
-  integer(4),  parameter :: dp = 8
-  integer(4),  parameter :: qp = 16
+#ifdef REAL32
+  integer,parameter,public :: lsmr_wp = real32   !! real kind used by this module [4 bytes]
+#elif REAL64
+  integer,parameter,public :: lsmr_wp = real64   !! real kind used by this module [8 bytes]
+#elif REAL128
+  integer,parameter,public :: lsmr_wp = real128  !! real kind used by this module [16 bytes]
+#else
+  integer,parameter,public :: lsmr_wp = real64   !! real kind used by this module [8 bytes]
+#endif
+
+  integer, parameter,public :: lsmr_ip = int32 !! integer kind used by this module
+
+  ! integer(4),  parameter :: sp = 4
+  ! integer(4),  parameter :: dp = 8
+  ! integer(4),  parameter :: qp = 16
 ! real(sp),    parameter :: spzero = 0.0_sp, spone = 1.0_sp
 ! real(dp),    parameter :: dpzero = 0.0_dp, dpone = 1.0_dp
 ! real(qp),    parameter :: qpzero = 0.0_qp, qpone = 1.0_qp

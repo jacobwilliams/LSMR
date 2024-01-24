@@ -18,21 +18,21 @@ module lsmrblasInterface
 
   interface                              ! Level 1 BLAS
      function ddot  (n,dx,incx,dy,incy)
-       use lsmrDataModule, only : ip, dp
+       use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
        integer(ip), intent(in)    :: n,incx,incy
        real(dp),    intent(in)    :: dx(*),dy(*)
        real(dp)                   :: ddot
      end function ddot
 
      function dnrm2 (n,dx,incx)
-       use lsmrDataModule, only : ip, dp
+       use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
        integer(ip), intent(in)    :: n,incx
        real(dp),    intent(in)    :: dx(*)
        real(dp)                   :: dnrm2
      end function dnrm2
 
      subroutine dscal (n,sa,x,incx)
-       use lsmrDataModule, only : ip, dp
+       use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
        integer(ip), intent(in)    :: n,incx
        real(dp),    intent(in)    :: sa
        real(dp),    intent(inout) :: x(*)

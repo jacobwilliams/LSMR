@@ -24,7 +24,7 @@
 
 module lsmrModule
 
-  use  lsmrDataModule,    only : ip, dp
+  use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
   implicit none
   private
   public   :: LSMR
@@ -46,14 +46,14 @@ contains
 
     interface
        subroutine Aprod1(m,n,x,y)                   ! y := y + A*x
-         use lsmrDataModule, only : ip, dp
+         use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
          integer(ip), intent(in)    :: m, n
          real(dp),    intent(in)    :: x(n)
          real(dp),    intent(inout) :: y(m)
        end subroutine Aprod1
 
        subroutine Aprod2(m,n,x,y)                   ! x := x + A'*y
-         use lsmrDataModule, only : ip, dp
+         use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
          integer(ip), intent(in)    :: m, n
          real(dp),    intent(inout) :: x(n)
          real(dp),    intent(in)    :: y(m)
@@ -178,7 +178,7 @@ contains
     !                    of damp in the range 0 to sqrt(eps)*norm(A)
     !                    will probably have a negligible effect.
     !                    Larger values of damp will tend to decrease
-    !                    the norm of x and reduce the number of 
+    !                    the norm of x and reduce the number of
     !                    iterations required by LSMR.
     !
     !                    The work per iteration and the storage needed
@@ -286,7 +286,7 @@ contains
     !
     ! normx   output     An estimate of norm(x) for the final solution x.
     !
-    ! Subroutines and functions used              
+    ! Subroutines and functions used
     ! ------------------------------
     ! BLAS               dscal, dnrm2
     ! USER               Aprod1, Aprod2
@@ -355,7 +355,7 @@ contains
     if (show) then
        write(nout, 1000) enter,m,n,damp,atol,conlim,btol,itnlim,localVecs
     end if
-    
+
     pfreq  = 20           ! print frequency (for repeating the heading)
     pcount = 0            ! print counter
     damped = damp > zero  !
@@ -460,7 +460,7 @@ contains
     !===================================================================
     do
        itn = itn + 1
-	  
+
        !----------------------------------------------------------------
        ! Perform the next step of the bidiagonalization to obtain the
        ! next beta, u, alpha, v.  These satisfy
@@ -487,9 +487,9 @@ contains
              v = (one/alpha)*v    ! call dscal (n, (one/alpha), v, 1)
           end if
        end if
-    
+
        ! At this point, beta = beta_{k+1}, alpha = alpha_{k+1}.
-    
+
        !----------------------------------------------------------------
        ! Construct rotation Qhat_{k,2k+1}.
 
@@ -507,7 +507,7 @@ contains
        alphabar = c*alpha
 
        ! Use a plane rotation (Qbar_i) to turn R_i^T into R_i^bar.
-    
+
        rhobarold = rhobar
        zetaold   = zeta
        thetabar  = sbar*rho
@@ -525,7 +525,7 @@ contains
        h         = v - (thetanew/rho)*h
 
        ! Estimate ||r||.
-    
+
        ! Apply rotation Qhat_{k,2k+1}.
        betaacute =   chat* betadd
        betacheck = - shat* betadd
@@ -552,15 +552,15 @@ contains
        taud          = (zeta - thetatilde*tautildeold)/rhodold
        d             = d + betacheck**2
        normr         = sqrt(d + (betad - taud)**2 + betadd**2)
-    
+
        ! Estimate ||A||.
        normA2        = normA2 + beta**2
        normA         = sqrt(normA2)
        normA2        = normA2 + alpha**2
-    
+
        ! Estimate cond(A).
        maxrbar       = max(maxrbar,rhobarold)
-       if (itn > 1) then 
+       if (itn > 1) then
           minrbar    = min(minrbar,rhobarold)
        end if
        condA         = max(maxrbar,rhotemp)/min(minrbar,rhotemp)

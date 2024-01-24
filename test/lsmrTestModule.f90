@@ -27,7 +27,7 @@
 
 module lsmrTestModule
 
-  use  lsmrDataModule,    only : ip, dp
+   use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
   use  lsmrModule,        only : LSMR
   use  lsmrCheckModule,   only : Acheck, xcheck
 
@@ -69,7 +69,7 @@ contains
 
     s = s + s
     x = x - s*z
-    
+
   end subroutine Hprod
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -146,7 +146,7 @@ contains
 
     !-------------------------------------------------------------------
     ! lstp  generates a sparse least-squares test problem of the form
-    !           (   A    )*x = ( b ) 
+    !           (   A    )*x = ( b )
     !           ( damp*I )     ( 0 )
     ! for solution by LSMR, or a sparse underdetermined system
     !            Ax + damp*s = b
@@ -296,7 +296,7 @@ contains
                      line,line
 
     call Acheck(m,n,Aprod1,Aprod2,nout,inform)   ! Check Aprod1, Aprod2.
-          
+
     if (inform > 0) then
        write(nout,'(a)') 'Check tol in subroutine Acheck in lsmrCheckModule'
        stop

@@ -22,7 +22,7 @@
 
 module lsmrCheckModule
 
-  use  lsmrDataModule,    only : ip, dp
+  use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
   implicit none
   public   :: Acheck, xcheck
 
@@ -38,14 +38,14 @@ contains
                                          ! = 1 otherwise
     interface
        subroutine Aprod1(m,n,x,y)                   ! y := y + A*x
-         use lsmrDataModule, only : ip, dp
+         use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
          integer(ip), intent(in)    :: m,n
          real(dp),    intent(in)    :: x(n)
          real(dp),    intent(inout) :: y(m)
        end subroutine Aprod1
 
        subroutine Aprod2(m,n,x,y)                   ! x := x + A'*y
-         use lsmrDataModule, only : ip, dp
+         use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
          integer(ip), intent(in)    :: m,n
          real(dp),    intent(inout) :: x(n)
          real(dp),    intent(in)    :: y(m)
@@ -73,7 +73,7 @@ contains
     !                  if 3/4 of the available digits agree.
     !                  power = 0.5 seems a reasonable requirement
     !                  (asking for half the digits to agree).
-    !                    
+    !
     ! History:
     ! 04 Sep 1991  Initial design and code.
     !              Michael Saunders, Dept of Operations Research,
@@ -108,18 +108,18 @@ contains
        t    = t + one
        x(j) = sqrt(t)
     end do
- 
+
     t = one
     do i=1,m
        t    = t + one
        y(i) = one/sqrt(t)
     end do
- 
+
     alfa = sqrt( dot_product(x,x) )     ! dnrm2 (n,x,1)
     beta = sqrt( dot_product(y,y) )     ! dnrm2 (m,y,1)
     x    = (one/alfa)*x                 ! call dscal (n, (one/alfa), x, 1)
     y    = (one/beta)*y                 ! call dscal (m, (one/beta), y, 1)
-      
+
     !===================================================================
     ! Test if y'(y + Ax) = x'(x + A'y).
     !===================================================================
@@ -127,10 +127,10 @@ contains
     v(1:n) = x(1:n)
     call Aprod1(m,n,x,w)
     call Aprod2(m,n,v,y)
-      
+
     alfa   = dot_product(y,w)    ! Now set    alfa = y'w,  beta = x'v.
     beta   = dot_product(x,v)
-    test1  = abs(alfa - beta)            
+    test1  = abs(alfa - beta)
     test2  = one + abs(alfa) + abs(beta)
     test3  = test1 / test2
 
@@ -149,7 +149,7 @@ contains
         ' Aprod1, Aprod2 seem OK.  Relative error =', e10.1)
  1020 format(1p, &
         ' Aprod1, Aprod2 seem incorrect.  Relative error =', e10.1)
-	          
+
   end subroutine Acheck
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -174,14 +174,14 @@ contains
 
     interface
        subroutine Aprod1(m,n,x,y)                   ! y := y + A*x
-         use lsmrDataModule, only : ip, dp
+         use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
          integer(ip), intent(in)    :: m, n
          real(dp),    intent(in)    :: x(n)
          real(dp),    intent(inout) :: y(m)
        end subroutine Aprod1
 
        subroutine Aprod2(m,n,x,y)                   ! x := x + A'*y
-         use lsmrDataModule, only : ip, dp
+         use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
          integer(ip), intent(in)    :: m, n
          real(dp),    intent(inout) :: x(n)
          real(dp),    intent(in)    :: y(m)
@@ -223,16 +223,16 @@ contains
 
     r(1:m) = -b(1:m)        ! Compute the residual r = b - Ax
     call Aprod1(m,n,x,r)    ! via  r = -b + Ax,
-    r(1:m) = -r(1:m)        !      r = -r. 
+    r(1:m) = -r(1:m)        !      r = -r.
 
     v(1:n) = zero           ! Compute v = A'r
-    call Aprod2(m,n,v,r)    ! via  v = 0,  v = v + A'r. 
+    call Aprod2(m,n,v,r)    ! via  v = 0,  v = v + A'r.
 
     bnorm  = sqrt( dot_product(b,b) ) ! Compute the norms of b, x, r, v.
     xnorm  = sqrt( dot_product(x,x) )
     rho1   = sqrt( dot_product(r,r) )
     sigma1 = sqrt( dot_product(v,v) )
-      
+
     if (nout > 0) write(nout,2200) damp, xnorm, rho1, sigma1
 
     if (damp == zero) then
@@ -263,7 +263,7 @@ contains
        if (rho1  > zero) test2  = sigma1 / (Anorm*rho1)
        test3  = test2
        if (rho2  > zero) test3  = sigma2 / (Anorm*rho2)
-       
+
        if (test3 <= tol2) inform = 3
        if (test2 <= tol2) inform = 2
        if (test1 <= tol2) inform = 1
