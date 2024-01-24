@@ -3,10 +3,6 @@
 !
 !    Acheck   xcheck
 !
-! Acheck tests if a user's matrix-vector product routines for
-! computing y + A*x and x + A'*y are working with the same A.
-! xcheck tests if a given x seems to be a solution of Ax = b or Ax ~= b.
-!
 ! Maintained by Michael Saunders <saunders@stanford.edu>.
 !
 ! 07 Sep 2007: Line by line translation of f77 file lsmrcheck.f to f90
@@ -24,13 +20,17 @@ module lsmrCheckModule
 
   use lsmrDataModule, only : ip => lsmr_ip, dp => lsmr_wp
   implicit none
-  public   :: Acheck, xcheck
+  public   :: acheck, xcheck
 
 contains
 
-  !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!>
+! Acheck tests if a user's matrix-vector product routines for
+! computing y + A*x and x + A'*y are working with the same A.
+! xcheck tests if a given x seems to be a solution of Ax = b or Ax ~= b.
 
-  subroutine Acheck( m, n, Aprod1, Aprod2, nout, inform )
+subroutine acheck( m, n, Aprod1, Aprod2, nout, inform )
 
     integer(ip), intent(in)    :: m, n   ! No. of rows and cols of A
     integer(ip), intent(in)    :: nout   ! Output file number
@@ -150,7 +150,7 @@ contains
  1020 format(1p, &
         ' Aprod1, Aprod2 seem incorrect.  Relative error =', e10.1)
 
-  end subroutine Acheck
+  end subroutine acheck
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

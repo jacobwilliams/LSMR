@@ -2,7 +2,7 @@
 !>
 !  This file contains the following BLAS routines
 !  [[dcopy]], [[ddot]], [[dnrm2]], [[dscal]]
-!  required by subroutines [[LSMR]] and [[Acheck]].
+!  required by subroutines [[lsmr]] and [[acheck]].
 !
 !### References
 !
@@ -11,7 +11,6 @@
 !    SIAM, 1979,
 !    ISBN13: 978-0-898711-72-1,
 !    LC: QA214.L56.
-!
 !  * Charles Lawson, Richard Hanson, David Kincaid, Fred Krogh,
 !    Algorithm 539,
 !    Basic Linear Algebra Subprograms for Fortran Usage,
