@@ -5,6 +5,7 @@ module spral_lapack_iface
   private
   public :: dpotrf, dlacpy, dsytrf
   public :: zpotrf, zlacpy
+  public :: dgels
 
   interface
     subroutine dpotrf( uplo, n, a, lda, info )
@@ -49,6 +50,13 @@ module spral_lapack_iface
       complex(PRECISION), intent(in ) :: a(lda, n)
       complex(PRECISION), intent(out) :: b(ldb, n)
     end subroutine zlacpy
+
+    subroutine dgels( trans, m, n, nrhs, a, lda, b, ldb, work, lwork, info )
+    character          trans
+    integer            info, lda, ldb, lwork, m, n, nrhs
+    double precision   a( lda, * ), b( ldb, * ), work( * )
+    end subroutine dgels
+
   end interface
 
 end module spral_lapack_iface

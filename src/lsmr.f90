@@ -79,6 +79,9 @@
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 module spral_lsmr
+
+  use spral_blas_iface
+
   implicit none
 
   private
@@ -518,7 +521,7 @@ contains
                    rtol, s, shat, stildeold, t1, taud, test1, test2, test3,   &
                    thetabar, thetanew, thetatildeold
 
-    real(wp) :: dnrm2
+    !real(wp) :: dnrm2
 
     ! Local constants
 
