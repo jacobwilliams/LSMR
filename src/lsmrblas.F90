@@ -1,10 +1,22 @@
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-!     File lsmrblas.f90   (double precision)
+!*****************************************************************************
+!>
+!  This file contains the following BLAS routines
+!  [[dcopy]], [[ddot]], [[dnrm2]], [[dscal]]
+!  required by subroutines [[LSMR]] and [[Acheck]].
 !
-!     This file contains the following BLAS routines
-!        dcopy, ddot, dnrm2, dscal
-!     required by subroutines LSMR and Acheck.
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+!### References
+!
+!  * Jack Dongarra, Jim Bunch, Cleve Moler, Pete Stewart,
+!    LINPACK User's Guide,
+!    SIAM, 1979,
+!    ISBN13: 978-0-898711-72-1,
+!    LC: QA214.L56.
+!
+!  * Charles Lawson, Richard Hanson, David Kincaid, Fred Krogh,
+!    Algorithm 539,
+!    Basic Linear Algebra Subprograms for Fortran Usage,
+!    ACM Transactions on Mathematical Software,
+!    Volume 5, Number 3, September 1979, pages 308-323.
 
    module lsmrblas
 
@@ -56,33 +68,9 @@
 
    contains
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! DCOPY copies a vector X to a vector Y.
-!
-!  Discussion:
-!    This routine uses double precision real arithmetic.
-!    The routine uses unrolled loops for increments equal to one.
-!
-!  Modified:
-!    16 May 2005
-!
-!  Author:
-!    Jack Dongarra
-!    Fortran90 translation by John Burkardt.
-!
-!  Reference:
-!
-!    Jack Dongarra, Jim Bunch, Cleve Moler, Pete Stewart,
-!    LINPACK User's Guide,
-!    SIAM, 1979,
-!    ISBN13: 978-0-898711-72-1,
-!    LC: QA214.L56.
-!
-!    Charles Lawson, Richard Hanson, David Kincaid, Fred Krogh,
-!    Algorithm 539,
-!    Basic Linear Algebra Subprograms for Fortran Usage,
-!    ACM Transactions on Mathematical Software,
-!    Volume 5, Number 3, September 1979, pages 308-323.
+!*****************************************************************************
+!>
+!  Copies a vector X to a vector Y.
 
       subroutine dcopy(n,dx,incx,dy,incy)
 
@@ -135,253 +123,148 @@
 
 end subroutine dcopy
 
+!*****************************************************************************
+!>
+!  Dot product of two vectors.
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!
-!! DDOT forms the dot product of two vectors.
-!
-!  Discussion:
-!    This routine uses double precision real arithmetic.
-!    This routine uses unrolled loops for increments equal to one.
-!
-!  Modified:
-!    16 May 2005
-!
-!  Author:
-!    Jack Dongarra
-!    Fortran90 translation by John Burkardt.
-!
-!  Reference:
-!    Jack Dongarra, Jim Bunch, Cleve Moler, Pete Stewart,
-!    LINPACK User's Guide,
-!    SIAM, 1979,
-!    ISBN13: 978-0-898711-72-1,
-!    LC: QA214.L56.
-!
-!    Charles Lawson, Richard Hanson, David Kincaid, Fred Krogh,
-!    Algorithm 539,
-!    Basic Linear Algebra Subprograms for Fortran Usage,
-!    ACM Transactions on Mathematical Software,
-!    Volume 5, Number 3, September 1979, pages 308-323.
-!
-!  Parameters:
-!
-!    Input, integer N, the number of entries in the vectors.
-!
-!    Input, real ( kind = 8 ) DX(*), the first vector.
-!
-!    Input, integer INCX, the increment between successive entries in DX.
-!
-!    Input, real ( kind = 8 ) DY(*), the second vector.
-!
-!    Input, integer INCY, the increment between successive entries in DY.
-!
-!    Output, real ( kind = 8 ) DDOT, the sum of the product of the
-!    corresponding entries of DX and DY.
+   real(wp) function ddot(n,dx,incx,dy,incy)
 
+   integer(ip),intent(in) :: n !! the number of entries in the vectors.
+   real(wp),intent(in) :: dx(*) !! the first vector
+   integer(ip),intent(in) :: incx !! the increment between successive entries in DX.
+   real(wp),intent(in) :: dy(*) !! the second vector
+   integer(ip),intent(in) :: incy !! the increment between successive entries in DY.
 
-      double precision function ddot(n,dx,incx,dy,incy)
+   integer(ip) :: i,ix,iy,m
+   real(wp) :: dtemp
 
-      real(wp)    dx(*),dy(*),dtemp
-      integer(ip) i,incx,incy,ix,iy,m,n
+   ddot = 0.0_wp
+   dtemp = 0.0_wp
+   if ( n <= 0 ) return
 
-      ddot = 0.0_wp
-      dtemp = 0.0_wp
-      if ( n <= 0 ) return
+   if ( incx /= 1 .or. incy /= 1 ) then
+      !  Code for unequal increments or equal increments
+      !  not equal to 1.
 
-!  Code for unequal increments or equal increments
-!  not equal to 1.
+      if ( 0 <= incx ) then
+         ix = 1
+      else
+         ix = ( - n + 1 ) * incx + 1
+      end if
 
-      if ( incx /= 1 .or. incy /= 1 ) then
+      if ( 0 <= incy ) then
+         iy = 1
+      else
+         iy = ( - n + 1 ) * incy + 1
+      end if
 
-         if ( 0 <= incx ) then
-            ix = 1
-         else
-            ix = ( - n + 1 ) * incx + 1
-         end if
+      do i = 1, n
+         dtemp = dtemp + dx(ix) * dy(iy)
+         ix = ix + incx
+         iy = iy + incy
+      end do
 
-         if ( 0 <= incy ) then
-            iy = 1
-         else
-            iy = ( - n + 1 ) * incy + 1
-         end if
+   else
+      ! Code for both increments equal to 1.
 
-         do i = 1, n
-            dtemp = dtemp + dx(ix) * dy(iy)
-            ix = ix + incx
-            iy = iy + incy
-         end do
+      m = mod ( n, 5 )
 
-!  Code for both increments equal to 1.
+      do i = 1, m
+         dtemp = dtemp + dx(i) * dy(i)
+      end do
 
-        else
+      do i = m+1, n, 5
+         dtemp = dtemp + dx(i)*dy(i) + dx(i+1)*dy(i+1) + dx(i+2)*dy(i+2) &
+                                     + dx(i+3)*dy(i+3) + dx(i+4)*dy(i+4)
+      end do
 
-           m = mod ( n, 5 )
+   end if
 
-           do i = 1, m
-              dtemp = dtemp + dx(i) * dy(i)
-           end do
-
-           do i = m+1, n, 5
-              dtemp = dtemp + dx(i)*dy(i) + dx(i+1)*dy(i+1) + dx(i+2)*dy(i+2) &
-                                          + dx(i+3)*dy(i+3) + dx(i+4)*dy(i+4)
-           end do
-
-        end if
-
-        ddot = dtemp
+   ddot = dtemp
 
 end function ddot
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!*****************************************************************************80
-!
-!! DNRM2 returns the euclidean norm of a vector.
-!
-!  Discussion:
-!    This routine uses double precision real arithmetic.
-!     DNRM2 ( X ) = sqrt ( X' * X )
-!
-!  Modified:
-!    16 May 2005
-!
-!  Author:
-!    Sven Hammarling
-!    Fortran90 translation by John Burkardt.
-!
-!  Reference:
-!    Jack Dongarra, Jim Bunch, Cleve Moler, Pete Stewart,
-!    LINPACK User's Guide,
-!    SIAM, 1979,
-!    ISBN13: 978-0-898711-72-1,
-!    LC: QA214.L56.
-!
-!    Charles Lawson, Richard Hanson, David Kincaid, Fred Krogh,
-!    Algorithm 539,
-!    Basic Linear Algebra Subprograms for Fortran Usage,
-!    ACM Transactions on Mathematical Software,
-!    Volume 5, Number 3, September 1979, pages 308-323.
-!
-!  Parameters:
-!
-!    Input, integer N, the number of entries in the vector.
-!
-!    Input, real ( kind = 8 ) X(*), the vector whose norm is to be computed.
-!
-!    Input, integer INCX, the increment between successive entries of X.
-!
-!    Output, real ( kind = 8 ) DNRM2, the Euclidean norm of X.
-!
+!*****************************************************************************
+!>
+!  The euclidean norm of a vector `sqrt ( X' * X )`.
 
-      real(wp) function dnrm2 ( n, x, incx)
-      integer(ip) ix,n,incx
-      real(wp)    x(*), ssq,absxi,norm,scale
+   real(wp) function dnrm2 ( n, x, incx)
 
-      if ( n < 1 .or. incx < 1 ) then
-         norm  = 0.0_wp
-      else if ( n == 1 ) then
-         norm  = abs ( x(1) )
-      else
-         scale = 0.0_wp
-         ssq = 1.0_wp
+   integer(ip),intent(in) :: n
+   real(wp),intent(in) :: x(*)
+   integer(ip),intent(in) :: incx
 
-         do ix = 1, 1 + ( n - 1 )*incx, incx
-            if ( x(ix) /= 0.0_wp ) then
-               absxi = abs ( x(ix) )
-               if ( scale < absxi ) then
-                  ssq = 1.0_wp + ssq * ( scale / absxi )**2
-                  scale = absxi
-               else
-                  ssq = ssq + ( absxi / scale )**2
-               end if
+   integer(ip) :: ix
+   real(wp) :: ssq,absxi,norm,scale
+
+   if ( n < 1 .or. incx < 1 ) then
+      norm  = 0.0_wp
+   else if ( n == 1 ) then
+      norm  = abs ( x(1) )
+   else
+      scale = 0.0_wp
+      ssq = 1.0_wp
+
+      do ix = 1, 1 + ( n - 1 )*incx, incx
+         if ( x(ix) /= 0.0_wp ) then
+            absxi = abs ( x(ix) )
+            if ( scale < absxi ) then
+               ssq = 1.0_wp + ssq * ( scale / absxi )**2
+               scale = absxi
+            else
+               ssq = ssq + ( absxi / scale )**2
             end if
-         end do
-         norm  = scale * sqrt ( ssq )
-      end if
+         end if
+      end do
+      norm  = scale * sqrt ( ssq )
+   end if
 
-      dnrm2 = norm
+   dnrm2 = norm
 
 end function dnrm2
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! DSCAL scales a vector by a constant.
-!
-!  Discussion:
-!    This routine uses double precision real arithmetic.
-!
-!  Modified:
-!    08 April 1999
-!
-!  Author:
-!    Jack Dongarra
-!    Fortran90 translation by John Burkardt.
-!
-!  Reference:
-!    Jack Dongarra, Jim Bunch, Cleve Moler, Pete Stewart,
-!    LINPACK User's Guide,
-!    SIAM, 1979,
-!    ISBN13: 978-0-898711-72-1,
-!    LC: QA214.L56.
-!
-!    Charles Lawson, Richard Hanson, David Kincaid, Fred Krogh,
-!    Algorithm 539,
-!    Basic Linear Algebra Subprograms for Fortran Usage,
-!    ACM Transactions on Mathematical Software,
-!    Volume 5, Number 3, September 1979, pages 308-323.
-!
-!  Parameters:
-!
-!    Input, integer N, the number of entries in the vector.
-!
-!    Input, real ( kind = 8 ) SA, the multiplier.
-!
-!    Input/output, real ( kind = 8 ) X(*), the vector to be scaled.
-!
-!    Input, integer INCX, the increment between successive entries of X.
-!
+!*****************************************************************************
+!>
+!  Scales a vector by a constant.
 
-      subroutine  dscal(n,sa,x,incx)
+   subroutine dscal(n,sa,x,incx)
 
-      integer(ip) i
-      integer(ip) incx
-      integer(ip) ix
-      integer(ip) m
-      integer(ip) n
-      real(wp)    sa
-      real(wp)    x(*)
+   integer(ip),intent(in) :: n !! the number of entries in the vector.
+   real(wp)   ,intent(in) :: sa !! the multiplier.
+   real(wp),intent(inout) :: x(*) !! the vector to be scaled.
+   integer(ip),intent(in) :: incx !! the increment between successive entries of X.
 
-      if ( n <= 0 ) then
-         return
-      else if ( incx == 1 ) then
-         m = mod ( n, 5 )
-         x(1:m) = sa * x(1:m)
+   integer(ip) :: i, ix
+   integer(ip) :: m
 
-         do i = m+1, n, 5
-            x(i)   = sa * x(i)
-            x(i+1) = sa * x(i+1)
-            x(i+2) = sa * x(i+2)
-            x(i+3) = sa * x(i+3)
-            x(i+4) = sa * x(i+4)
-         end do
+   if ( n <= 0 ) then
+      return
+   else if ( incx == 1 ) then
+      m = mod ( n, 5 )
+      x(1:m) = sa * x(1:m)
+
+      do i = m+1, n, 5
+         x(i)   = sa * x(i)
+         x(i+1) = sa * x(i+1)
+         x(i+2) = sa * x(i+2)
+         x(i+3) = sa * x(i+3)
+         x(i+4) = sa * x(i+4)
+      end do
+   else
+      if ( 0 <= incx ) then
+         ix = 1
       else
-         if ( 0 <= incx ) then
-            ix = 1
-         else
-            ix = ( - n + 1 ) * incx + 1
-         end if
-
-         do i = 1, n
-            x(ix) = sa * x(ix)
-            ix = ix + incx
-         end do
-
+         ix = ( - n + 1 ) * incx + 1
       end if
 
+      do i = 1, n
+         x(ix) = sa * x(ix)
+         ix = ix + incx
+      end do
+
+   end if
+
 end subroutine dscal
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #endif
 
