@@ -37,3 +37,5 @@ The latest API documentation can be found [here](https://jacobwilliams.github.io
 
  * [LSMR: Sparse Equations and Least Squares](https://web.stanford.edu/group/SOL/software/lsmr/) -- LSMR original code.
  * [Sparse Parallel Robust Algorithms Library](https://github.com/ralna/spral) -- another version
+ * [LSQR](https://github.com/jacobwilliams/LSQR)
+ * [LUSOL](https://github.com/jacobwilliams/lusol)
