@@ -1,6 +1,6 @@
 !*****************************************************************************
 !>
-!  LSMR solves Ax = b or min ||Ax - b|| with or without damping,
+!  LSMR solves `Ax = b` or `min ||Ax - b||` with or without damping,
 !  using the iterative algorithm of David Fong and Michael Saunders.
 !
 !### Authors
@@ -54,22 +54,22 @@ contains
    !>
    ! LSMR finds a solution x to the following problems:
    !
-   ! 1. Unsymmetric equations:    Solve  A*x = b
-   !
-   ! 2. Linear least squares:     Solve  A*x = b
-   !                              in the least-squares sense
-   !
-   ! 3. Damped least squares:     Solve  (   A    )*x = ( b )
-   !                                     ( damp*I )     ( 0 )
-   !                              in the least-squares sense
+   ! 1. Unsymmetric equations: Solve `A*x = b`
+   ! 2. Linear least squares: Solve `A*x = b` in the least-squares sense
+   ! 3. Damped least squares: Solve
+   !```
+   !  (   A    )*x = ( b )
+   !  ( damp*I )     ( 0 )
+   !```
+   ! in the least-squares sense
    !
    ! where A is a matrix with m rows and n columns, b is an m-vector,
    ! and damp is a scalar.  (All quantities are real.)
    ! The matrix A is treated as a linear operator.  It is accessed
    ! by means of subroutine calls with the following purpose:
    !
-   ! call Aprod1(m,n,x,y)  must compute y = y + A*x  without altering x.
-   ! call Aprod2(m,n,x,y)  must compute x = x + A'*y without altering y.
+   ! * `call Aprod1(m,n,x,y)`  must compute `y = y + A*x ` without altering `x`.
+   ! * `call Aprod2(m,n,x,y)`  must compute `x = x + A'*y` without altering `y`.
    !
    ! LSMR uses an iterative method to approximate the solution.
    ! The number of iterations required to reach a certain accuracy
@@ -101,28 +101,28 @@ contains
    ! If some initial estimate x0 is known and if damp = 0,
    ! one could proceed as follows:
    !
-   ! 1. Compute a residual vector     r0 = b - A*x0.
-   ! 2. Use LSMR to solve the system  A*dx = r0.
-   ! 3. Add the correction dx to obtain a final solution x = x0 + dx.
+   ! 1. Compute a residual vector     `r0 = b - A*x0`.
+   ! 2. Use LSMR to solve the system  `A*dx = r0`.
+   ! 3. Add the correction `dx` to obtain a final solution `x = x0 + dx`.
    !
    ! This requires that x0 be available before and after the call
    ! to LSMR.  To judge the benefits, suppose LSMR takes k1 iterations
-   ! to solve A*x = b and k2 iterations to solve A*dx = r0.
+   ! to solve `A*x = b` and k2 iterations to solve `A*dx = r0`.
    ! If x0 is "good", norm(r0) will be smaller than norm(b).
    ! If the same stopping tolerances atol and btol are used for each
-   ! system, k1 and k2 will be similar, but the final solution x0 + dx
+   ! system, k1 and k2 will be similar, but the final solution `x0 + dx`
    ! should be more accurate.  The only way to reduce the total work
    ! is to use a larger stopping tolerance for the second system.
-   ! If some value btol is suitable for A*x = b, the larger value
-   ! btol*norm(b)/norm(r0)  should be suitable for A*dx = r0.
+   ! If some value btol is suitable for `A*x = b`, the larger value
+   ! `btol*norm(b)/norm(r0)`  should be suitable for `A*dx = r0`.
    !
    ! Preconditioning is another way to reduce the number of iterations.
-   ! If it is possible to solve a related system M*x = b efficiently,
+   ! If it is possible to solve a related system `M*x = b` efficiently,
    ! where M approximates A in some helpful way
    ! (e.g. M - A has low rank or its elements are small relative to
    ! those of A), LSMR may converge more rapidly on the system
-   !       A*M(inverse)*z = b,
-   ! after which x can be recovered by solving M*x = z.
+   ! `A*M(inverse)*z = b`,
+   ! after which `x` can be recovered by solving `M*x = z`.
    !
    ! NOTE: If A is symmetric, LSMR should not be used!
    ! Alternatives are the symmetric conjugate-gradient method (CG)
@@ -133,12 +133,11 @@ contains
    ! symmetric CG that require slightly less work per iteration
    ! than SYMMLQ (but will take the same number of iterations).
    !
-   !
    ! Notation
    ! --------
    ! The following quantities are used in discussing the subroutine
    ! parameters:
-   !
+   !```
    ! Abar   =  (  A   ),        bbar  =  (b)
    !           (damp*I)                  (0)
    !
@@ -151,172 +150,130 @@ contains
    !           On most machines, eps is about 1.0e-7 and 1.0e-16
    !           in single and double precision respectively.
    !           We expect eps to be about 1e-16 always.
+   !```
+   ! LSMR  minimizes the function `normr` with respect to `x`.
    !
-   ! LSMR  minimizes the function normr with respect to x.
+   !### Precision
    !
-   !
-   ! Parameters
-   ! ----------
-   ! m       input      m, the number of rows in A.
-   !
-   ! n       input      n, the number of columns in A.
-   !
-   ! Aprod1, Aprod2     See above.
-   !
-   ! damp    input      The damping parameter for problem 3 above.
-   !                    (damp should be 0.0 for problems 1 and 2.)
-   !                    If the system A*x = b is incompatible, values
-   !                    of damp in the range 0 to sqrt(eps)*norm(A)
-   !                    will probably have a negligible effect.
-   !                    Larger values of damp will tend to decrease
-   !                    the norm of x and reduce the number of
-   !                    iterations required by LSMR.
-   !
-   !                    The work per iteration and the storage needed
-   !                    by LSMR are the same for all values of damp.
-   !
-   ! b(m)    input      The rhs vector b.
-   !
-   ! x(n)    output     Returns the computed solution x.
-   !
-   ! atol    input      An estimate of the relative error in the data
-   !                    defining the matrix A.  For example, if A is
-   !                    accurate to about 6 digits, set atol = 1.0e-6.
-   !
-   ! btol    input      An estimate of the relative error in the data
-   !                    defining the rhs b.  For example, if b is
-   !                    accurate to about 6 digits, set btol = 1.0e-6.
-   !
-   ! conlim  input      An upper limit on cond(Abar), the apparent
-   !                    condition number of the matrix Abar.
-   !                    Iterations will be terminated if a computed
-   !                    estimate of cond(Abar) exceeds conlim.
-   !                    This is intended to prevent certain small or
-   !                    zero singular values of A or Abar from
-   !                    coming into effect and causing unwanted growth
-   !                    in the computed solution.
-   !
-   !                    conlim and damp may be used separately or
-   !                    together to regularize ill-conditioned systems.
-   !
-   !                    Normally, conlim should be in the range
-   !                    1000 to 1/eps.
-   !                    Suggested value:
-   !                    conlim = 1/(100*eps)  for compatible systems,
-   !                    conlim = 1/(10*sqrt(eps)) for least squares.
-   !
-   !         Note: Any or all of atol, btol, conlim may be set to zero.
-   !         The effect will be the same as the values eps, eps, 1/eps.
-   !
-   ! itnlim  input      An upper limit on the number of iterations.
-   !                    Suggested value:
-   !                    itnlim = n/2   for well-conditioned systems
-   !                                   with clustered singular values,
-   !                    itnlim = 4*n   otherwise.
-   !
-   ! localSize input    No. of vectors for local reorthogonalization.
-   !            0       No reorthogonalization is performed.
-   !           >0       This many n-vectors "v" (the most recent ones)
-   !                    are saved for reorthogonalizing the next v.
-   !                    localSize need not be more than min(m,n).
-   !                    At most min(m,n) vectors will be allocated.
-   !
-   ! nout    input      File number for printed output.  If positive,
-   !                    a summary will be printed on file nout.
-   !
-   ! istop   output     An integer giving the reason for termination:
-   !
-   !            0       x = 0  is the exact solution.
-   !                    No iterations were performed.
-   !
-   !            1       The equations A*x = b are probably compatible.
-   !                    Norm(A*x - b) is sufficiently small, given the
-   !                    values of atol and btol.
-   !
-   !            2       damp is zero.  The system A*x = b is probably
-   !                    not compatible.  A least-squares solution has
-   !                    been obtained that is sufficiently accurate,
-   !                    given the value of atol.
-   !
-   !            3       damp is nonzero.  A damped least-squares
-   !                    solution has been obtained that is sufficiently
-   !                    accurate, given the value of atol.
-   !
-   !            4       An estimate of cond(Abar) has exceeded conlim.
-   !                    The system A*x = b appears to be ill-conditioned,
-   !                    or there could be an error in Aprod1 or Aprod2.
-   !
-   !            5       The iteration limit itnlim was reached.
-   !
-   ! itn     output     The number of iterations performed.
-   !
-   ! normA   output     An estimate of the Frobenius norm of Abar.
-   !                    This is the square-root of the sum of squares
-   !                    of the elements of Abar.
-   !                    If damp is small and the columns of A
-   !                    have all been scaled to have length 1.0,
-   !                    normA should increase to roughly sqrt(n).
-   !                    A radically different value for normA may
-   !                    indicate an error in Aprod1 or Aprod2.
-   !
-   ! condA   output     An estimate of cond(Abar), the condition
-   !                    number of Abar.  A very high value of condA
-   !                    may again indicate an error in Aprod1 or Aprod2.
-   !
-   ! normr   output     An estimate of the final value of norm(rbar),
-   !                    the function being minimized (see notation
-   !                    above).  This will be small if A*x = b has
-   !                    a solution.
-   !
-   ! normAr  output     An estimate of the final value of
-   !                    norm( Abar'*rbar ), the norm of
-   !                    the residual for the normal equations.
-   !                    This should be small in all cases.  (normAr
-   !                    will often be smaller than the true value
-   !                    computed from the output vector x.)
-   !
-   ! normx   output     An estimate of norm(x) for the final solution x.
-   !
-   ! Subroutines and functions used
-   ! ------------------------------
-   ! BLAS               dscal, dnrm2
-   ! USER               Aprod1, Aprod2
-   !
-   ! Precision
-   ! ---------
    ! The number of iterations required by LSMR will decrease
    ! if the computation is performed in higher precision.
-   ! At least 15-digit arithmetic should normally be used.
-   ! "real(dp)" declarations should normally be 8-byte words.
-   ! If this ever changes, the BLAS routines  dnrm2, dscal
-   ! (Lawson, et al., 1979) will also need to be changed.
    !
+   !### Reference
+   !  * http://www.stanford.edu/group/SOL/software/lsmr.html
    !
-   ! Reference
-   ! ---------
-   ! http://www.stanford.edu/group/SOL/software/lsmr.html
-   ! ------------------------------------------------------------------
+   !### LSMR development:
+   ! * 21 Sep 2007: Fortran 90 version of LSQR implemented.
+   !   Aprod1, Aprod2 implemented via f90 interface.
+   ! * 17 Jul 2010: LSMR derived from LSQR and lsmr.m.
+   ! * 07 Sep 2010: Local reorthogonalization now working.
+   ! * 02 May 2014: With damp>0, istop=2 was incorrectly set to istop=3
+   !   (so incorrect stopping message was printed).  Fixed.
    !
-   ! LSMR development:
-   ! 21 Sep 2007: Fortran 90 version of LSQR implemented.
-   !              Aprod1, Aprod2 implemented via f90 interface.
-   ! 17 Jul 2010: LSMR derived from LSQR and lsmr.m.
-   ! 07 Sep 2010: Local reorthogonalization now working.
-   ! 02 May 2014: With damp>0, istop=2 was incorrectly set to istop=3
-   !              (so incorrect stopping message was printed).  Fixed.
+   !@note Any or all of `atol`, `btol`, `conlim` may be set to zero.
+   !      The effect will be the same as the values `eps`, `eps`, `1/eps`.
 
   subroutine lsmr  ( m, n, Aprod1, Aprod2, b, damp,                    &
                      atol, btol, conlim, itnlim, localSize, nout,      &
                      x, istop, itn, normA, condA, normr, normAr, normx )
 
-    integer(ip), intent(in)  :: m, n, itnlim, localSize, nout
-    integer(ip), intent(out) :: istop, itn
-    real(dp),    intent(in)  :: b(m)
-    real(dp),    intent(out) :: x(n)
-    real(dp),    intent(in)  :: atol, btol, conlim, damp
-    real(dp),    intent(out) :: normA, condA, normr, normAr, normx
-    procedure(Aprod1_f) :: Aprod1
-    procedure(Aprod2_f) :: Aprod2
+    integer(ip), intent(in)  :: m !! the number of rows in A.
+    integer(ip), intent(in)  :: n !! the number of columns in A.
+    integer(ip), intent(in)  :: itnlim !! An upper limit on the number of iterations.
+                                       !! Suggested value:
+                                       !!
+                                       !!  * `itnlim = n/2` for well-conditioned systems
+                                       !!                   with clustered singular values,
+                                       !!  * `itnlim = 4*n` otherwise.
+    integer(ip), intent(in)  :: localSize !! No. of vectors for local reorthogonalization:
+                                          !!
+                                          !!  *  0    No reorthogonalization is performed.
+                                          !!  * >0    This many n-vectors "v" (the most recent ones)
+                                          !!          are saved for reorthogonalizing the next v.
+                                          !!
+                                          !! localSize need not be more than min(m,n).
+                                          !! At most min(m,n) vectors will be allocated.
+    integer(ip), intent(in)  :: nout !! File number for printed output.  If positive,
+                                     !! a summary will be printed on file nout.
+    integer(ip), intent(out) :: istop !! An integer giving the reason for termination:
+                                      !!
+                                      !!  * 0     x = 0  is the exact solution.
+                                      !!          No iterations were performed.
+                                      !!  * 1     The equations `A*x = b` are probably compatible.
+                                      !!          `Norm(A*x - b)` is sufficiently small, given the
+                                      !!          values of atol and btol.
+                                      !!  * 2     damp is zero.  The system `A*x = b` is probably
+                                      !!          not compatible.  A least-squares solution has
+                                      !!          been obtained that is sufficiently accurate,
+                                      !!          given the value of atol.
+                                      !!  * 3     damp is nonzero.  A damped least-squares
+                                      !!          solution has been obtained that is sufficiently
+                                      !!          accurate, given the value of atol.
+                                      !!  * 4     An estimate of cond(Abar) has exceeded conlim.
+                                      !!          The system `A*x = b` appears to be ill-conditioned,
+                                      !!          or there could be an error in Aprod1 or Aprod2.
+                                      !!  * 5     The iteration limit itnlim was reached.
+    integer(ip), intent(out) :: itn !! The number of iterations performed.
+    real(dp),    intent(in)  :: b(m) !! The rhs vector `b`.
+    real(dp),    intent(out) :: x(n) !! Returns the computed solution `x`.
+    real(dp),    intent(in)  :: atol !! An estimate of the relative error in the data
+                                     !! defining the matrix A.  For example, if A is
+                                     !! accurate to about 6 digits, set atol = 1.0e-6.
+    real(dp),    intent(in)  :: btol !! An estimate of the relative error in the data
+                                     !! defining the rhs b.  For example, if b is
+                                     !! accurate to about 6 digits, set btol = 1.0e-6.
+    real(dp),    intent(in)  :: conlim !! An upper limit on cond(Abar), the apparent
+                                       !! condition number of the matrix Abar.
+                                       !! Iterations will be terminated if a computed
+                                       !! estimate of cond(Abar) exceeds conlim.
+                                       !! This is intended to prevent certain small or
+                                       !! zero singular values of A or Abar from
+                                       !! coming into effect and causing unwanted growth
+                                       !! in the computed solution.
+                                       !!
+                                       !! conlim and damp may be used separately or
+                                       !! together to regularize ill-conditioned systems.
+                                       !!
+                                       !! Normally, conlim should be in the range
+                                       !! 1000 to 1/eps.
+                                       !! Suggested value:
+                                       !!
+                                       !! * `conlim = 1/(100*eps)`  for compatible systems,
+                                       !! * `conlim = 1/(10*sqrt(eps))` for least squares.
+    real(dp),    intent(in)  :: damp !! The damping parameter for problem 3 above.
+                                     !! (damp should be 0.0 for problems 1 and 2.)
+                                     !! If the system `A*x = b` is incompatible, values
+                                     !! of damp in the range 0 to `sqrt(eps)*norm(A)`
+                                     !! will probably have a negligible effect.
+                                     !! Larger values of damp will tend to decrease
+                                     !! the norm of x and reduce the number of
+                                     !! iterations required by LSMR.
+                                     !!
+                                     !! The work per iteration and the storage needed
+                                     !! by LSMR are the same for all values of damp.
+    real(dp),    intent(out) :: normA !! An estimate of the Frobenius norm of Abar.
+                                      !! This is the square-root of the sum of squares
+                                      !! of the elements of Abar.
+                                      !! If damp is small and the columns of A
+                                      !! have all been scaled to have length 1.0,
+                                      !! normA should increase to roughly sqrt(n).
+                                      !! A radically different value for normA may
+                                      !! indicate an error in Aprod1 or Aprod2.
+    real(dp),    intent(out) :: condA !! An estimate of cond(Abar), the condition
+                                      !! number of Abar.  A very high value of condA
+                                      !! may again indicate an error in Aprod1 or Aprod2.
+    real(dp),    intent(out) :: normr !! An estimate of the final value of norm(rbar),
+                                      !! the function being minimized (see notation
+                                      !! above).  This will be small if A*x = b has
+                                      !! a solution.
+    real(dp),    intent(out) :: normAr !! An estimate of the final value of
+                                       !! `norm( Abar'*rbar )`, the norm of
+                                       !! the residual for the normal equations.
+                                       !! This should be small in all cases.  (normAr
+                                       !! will often be smaller than the true value
+                                       !! computed from the output vector x.)
+    real(dp),    intent(out) :: normx !! An estimate of norm(x) for the final solution x.
+    procedure(Aprod1_f) :: Aprod1 !! See above.
+    procedure(Aprod2_f) :: Aprod2 !! See above.
 
     ! Local arrays and variables
     real(dp)    :: h(n), hbar(n), u(m), v(n), w(n), localV(n,min(localSize,m,n))

@@ -1,6 +1,6 @@
 name = "LSMR"
 version = "0.1.0"
-license = "license"
+license = "BSD"
 author = "Jacob Williams"
 copyright = "Copyright 2024, Jacob Williams"
 

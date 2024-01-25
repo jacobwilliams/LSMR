@@ -1,5 +1,11 @@
 LSMR: Sparse Equations and Least Squares
 
+### Status
+[![GitHub release](https://img.shields.io/github/release/jacobwilliams/LSMR.svg)](https://github.com/jacobwilliams/LSMR/releases/latest)
+[![CI Status](https://github.com/jacobwilliams/LSMR/actions/workflows/CI.yml/badge.svg)](https://github.com/jacobwilliams/LSMR/actions)
+[![codecov](https://codecov.io/gh/jacobwilliams/LSMR/branch/master/graph/badge.svg)](https://codecov.io/gh/jacobwilliams/LSMR)
+[![last-commit](https://img.shields.io/github/last-commit/jacobwilliams/LSMR)](https://github.com/jacobwilliams/LSMR/commits/master)
+
 ### Readme
 
 README for lsmrf90
