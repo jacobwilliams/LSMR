@@ -16,6 +16,14 @@
 !    Basic Linear Algebra Subprograms for Fortran Usage,
 !    ACM Transactions on Mathematical Software,
 !    Volume 5, Number 3, September 1979, pages 308-323.
+!
+#ifdef HAS_BLAS
+!@note This version has been linked with an external BLAS library,
+!      only the interfaces are defined in this module.
+#else
+!@note This version has not been linked with an external BLAS library,
+!      and uses the BLAS functions in this module.
+#endif
 
    module lsmrblas
 
@@ -61,7 +69,6 @@
       end subroutine dcopy
 
    end interface
-
 
 #else
 
