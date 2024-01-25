@@ -1,6 +1,8 @@
 LSMR: Sparse Equations and Least Squares
 
 ### Status
+
+[![Language](https://img.shields.io/badge/-Fortran-734f96?logo=fortran&logoColor=white)](https://github.com/topics/fortran)
 [![GitHub release](https://img.shields.io/github/release/jacobwilliams/LSMR.svg)](https://github.com/jacobwilliams/LSMR/releases/latest)
 [![CI Status](https://github.com/jacobwilliams/LSMR/actions/workflows/CI.yml/badge.svg)](https://github.com/jacobwilliams/LSMR/actions)
 [![codecov](https://codecov.io/gh/jacobwilliams/LSMR/branch/master/graph/badge.svg)](https://codecov.io/gh/jacobwilliams/LSMR)
