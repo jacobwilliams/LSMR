@@ -1,0 +1,1356 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="LSMR: Sparse Equations and Least Squares">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>lsmr &ndash; LSMR</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">LSMR </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>lsmr
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip"
+                 data-bs-placement="bottom" data-html="true"
+                 title="57.3% of total for procedures.">252 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/lsmrModule.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/lsmrmodule.f90.html'>lsmrModule.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/lsmrmodule.html'>lsmrModule</a></li>
+            <li class="breadcrumb-item active" aria-current="page">lsmr</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-bs-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/lsmr.html#src">lsmr</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine lsmr(m, n, Aprod1, Aprod2, b, damp, atol, btol, conlim, itnlim, localSize, nout, x, istop, itn, normA, condA, normr, normAr, normx)  
+</h2>
+    
+
+    <p>LSMR finds a solution x to the following problems:</p>
+<ol>
+<li>Unsymmetric equations: Solve <code>A*x = b</code></li>
+<li>Linear least squares: Solve <code>A*x = b</code> in the least-squares sense</li>
+<li>Damped least squares: Solve</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>  (   A    )*x = ( b )
+  ( damp*I )     ( 0 )
+</code></pre></div>
+
+<p>in the least-squares sense</p>
+<p>where A is a matrix with m rows and n columns, b is an m-vector,
+ and damp is a scalar.  (All quantities are real.)
+ The matrix A is treated as a linear operator.  It is accessed
+ by means of subroutine calls with the following purpose:</p>
+<ul>
+<li><code>call Aprod1(m,n,x,y)</code>  must compute <code>y = y + A*x</code> without altering <code>x</code>.</li>
+<li><code>call Aprod2(m,n,x,y)</code>  must compute <code>x = x + A'*y</code> without altering <code>y</code>.</li>
+</ul>
+<p>LSMR uses an iterative method to approximate the solution.
+ The number of iterations required to reach a certain accuracy
+ depends strongly on the scaling of the problem.  Poor scaling of
+ the rows or columns of A should therefore be avoided where
+ possible.</p>
+<p>For example, in problem 1 the solution is unaltered by
+ row-scaling.  If a row of A is very small or large compared to
+ the other rows of A, the corresponding row of ( A  b ) should be
+ scaled up or down.</p>
+<p>In problems 1 and 2, the solution x is easily recovered
+ following column-scaling.  Unless better information is known,
+ the nonzero columns of A should be scaled so that they all have
+ the same Euclidean norm (e.g., 1.0).</p>
+<p>In problem 3, there is no freedom to re-scale if damp is
+ nonzero.  However, the value of damp should be assigned only
+ after attention has been paid to the scaling of A.</p>
+<p>The parameter damp is intended to help regularize
+ ill-conditioned systems, by preventing the true solution from
+ being very large.  Another aid to regularization is provided by
+ the parameter condA, which may be used to terminate iterations
+ before the computed solution becomes very large.</p>
+<p>Note that x is not an input parameter.
+ If some initial estimate x0 is known and if damp = 0,
+ one could proceed as follows:</p>
+<ol>
+<li>Compute a residual vector     <code>r0 = b - A*x0</code>.</li>
+<li>Use LSMR to solve the system  <code>A*dx = r0</code>.</li>
+<li>Add the correction <code>dx</code> to obtain a final solution <code>x = x0 + dx</code>.</li>
+</ol>
+<p>This requires that x0 be available before and after the call
+ to LSMR.  To judge the benefits, suppose LSMR takes k1 iterations
+ to solve <code>A*x = b</code> and k2 iterations to solve <code>A*dx = r0</code>.
+ If x0 is "good", norm(r0) will be smaller than norm(b).
+ If the same stopping tolerances atol and btol are used for each
+ system, k1 and k2 will be similar, but the final solution <code>x0 + dx</code>
+ should be more accurate.  The only way to reduce the total work
+ is to use a larger stopping tolerance for the second system.
+ If some value btol is suitable for <code>A*x = b</code>, the larger value
+ <code>btol*norm(b)/norm(r0)</code>  should be suitable for <code>A*dx = r0</code>.</p>
+<p>Preconditioning is another way to reduce the number of iterations.
+ If it is possible to solve a related system <code>M*x = b</code> efficiently,
+ where M approximates A in some helpful way
+ (e.g. M - A has low rank or its elements are small relative to
+ those of A), LSMR may converge more rapidly on the system
+ <code>A*M(inverse)*z = b</code>,
+ after which <code>x</code> can be recovered by solving <code>M*x = z</code>.</p>
+<p>NOTE: If A is symmetric, LSMR should not be used!
+ Alternatives are the symmetric conjugate-gradient method (CG)
+ and/or SYMMLQ.
+ SYMMLQ is an implementation of symmetric CG that applies to
+ any symmetric A and will converge more rapidly than LSMR.
+ If A is positive definite, there are other implementations of
+ symmetric CG that require slightly less work per iteration
+ than SYMMLQ (but will take the same number of iterations).</p>
+<p>Notation</p>
+<hr>
+<p>The following quantities are used in discussing the subroutine
+ parameters:</p>
+<div class="codehilite"><pre><span></span><code> Abar   =  (  A   ),        bbar  =  (b)
+           (damp*I)                  (0)
+
+ r      =  b - A*x,         rbar  =  bbar - Abar*x
+
+ normr  =  sqrt( norm(r)**2  +  damp**2 <span class="gs">* norm(x)*</span>*2 )
+        =  norm( rbar )
+
+ eps    =  the relative precision of floating-point arithmetic.
+           On most machines, eps is about 1.0e-7 and 1.0e-16
+           in single and double precision respectively.
+           We expect eps to be about 1e-16 always.
+</code></pre></div>
+
+<p>LSMR  minimizes the function <code>normr</code> with respect to <code>x</code>.</p>
+<h3>Precision</h3>
+<p>The number of iterations required by LSMR will decrease
+ if the computation is performed in higher precision.</p>
+<h3>Reference</h3>
+<ul>
+<li>http://www.stanford.edu/group/SOL/software/lsmr.html</li>
+</ul>
+<h3>LSMR development:</h3>
+<ul>
+<li>21 Sep 2007: Fortran 90 version of LSQR implemented.
+   Aprod1, Aprod2 implemented via f90 interface.</li>
+<li>17 Jul 2010: LSMR derived from LSQR and lsmr.m.</li>
+<li>07 Sep 2010: Local reorthogonalization now working.</li>
+<li>02 May 2014: With damp&gt;0, istop=2 was incorrectly set to istop=3
+   (so incorrect stopping message was printed).  Fixed.</li>
+</ul>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>Any or all of <code>atol</code>, <code>btol</code>, <code>conlim</code> may be set to zero.
+      The effect will be the same as the values <code>eps</code>, <code>eps</code>, <code>1/eps</code>.</p>
+</div>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-m~3"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>m</strong></td>
+            <td>
+                <p>the number of rows in A.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~3"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                <p>the number of columns in A.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-aprod1"></span>
+              procedure(<a href='../interface/aprod1_f.html'>Aprod1_f</a>)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Aprod1</strong></td>
+            <td>
+                <p>See above.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-aprod2"></span>
+              procedure(<a href='../interface/aprod2_f.html'>Aprod2_f</a>)
+            </td>
+<td></td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>Aprod2</strong></td>
+            <td>
+                <p>See above.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-b"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>b</strong>(m)</td>
+            <td>
+                <p>The rhs vector <code>b</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-damp"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>damp</strong></td>
+            <td>
+                <p>The damping parameter for problem 3 above.
+(damp should be 0.0 for problems 1 and 2.)
+If the system <code>A*x = b</code> is incompatible, values
+of damp in the range 0 to <code>sqrt(eps)*norm(A)</code>
+will probably have a negligible effect.
+Larger values of damp will tend to decrease
+the norm of x and reduce the number of
+iterations required by LSMR.</p>
+<p>The work per iteration and the storage needed
+by LSMR are the same for all values of damp.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-atol"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>atol</strong></td>
+            <td>
+                <p>An estimate of the relative error in the data
+defining the matrix A.  For example, if A is
+accurate to about 6 digits, set atol = 1.0e-6.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-btol"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>btol</strong></td>
+            <td>
+                <p>An estimate of the relative error in the data
+defining the rhs b.  For example, if b is
+accurate to about 6 digits, set btol = 1.0e-6.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-conlim"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>conlim</strong></td>
+            <td>
+                <p>An upper limit on cond(Abar), the apparent
+condition number of the matrix Abar.
+Iterations will be terminated if a computed
+estimate of cond(Abar) exceeds conlim.
+This is intended to prevent certain small or
+zero singular values of A or Abar from
+coming into effect and causing unwanted growth
+in the computed solution.</p>
+<p>conlim and damp may be used separately or
+together to regularize ill-conditioned systems.</p>
+<p>Normally, conlim should be in the range
+1000 to 1/eps.
+Suggested value:</p>
+<ul>
+<li><code>conlim = 1/(100*eps)</code>  for compatible systems,</li>
+<li><code>conlim = 1/(10*sqrt(eps))</code> for least squares.</li>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-itnlim"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>itnlim</strong></td>
+            <td>
+                <p>An upper limit on the number of iterations.
+Suggested value:</p>
+<ul>
+<li><code>itnlim = n/2</code> for well-conditioned systems
+                  with clustered singular values,</li>
+<li><code>itnlim = 4*n</code> otherwise.</li>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-localsize"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>localSize</strong></td>
+            <td>
+                <p>No. of vectors for local reorthogonalization:</p>
+<ul>
+<li>0    No reorthogonalization is performed.</li>
+<li>
+<blockquote>
+<p>0    This many n-vectors "v" (the most recent ones)
+         are saved for reorthogonalizing the next v.</p>
+</blockquote>
+</li>
+</ul>
+<p>localSize need not be more than min(m,n).
+At most min(m,n) vectors will be allocated.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nout"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nout</strong></td>
+            <td>
+                <p>File number for printed output.  If positive,
+a summary will be printed on file nout.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~3"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(n)</td>
+            <td>
+                <p>Returns the computed solution <code>x</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-istop"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>istop</strong></td>
+            <td>
+                <p>An integer giving the reason for termination:</p>
+<ul>
+<li>0     x = 0  is the exact solution.
+         No iterations were performed.</li>
+<li>1     The equations <code>A*x = b</code> are probably compatible.
+         <code>Norm(A*x - b)</code> is sufficiently small, given the
+         values of atol and btol.</li>
+<li>2     damp is zero.  The system <code>A*x = b</code> is probably
+         not compatible.  A least-squares solution has
+         been obtained that is sufficiently accurate,
+         given the value of atol.</li>
+<li>3     damp is nonzero.  A damped least-squares
+         solution has been obtained that is sufficiently
+         accurate, given the value of atol.</li>
+<li>4     An estimate of cond(Abar) has exceeded conlim.
+         The system <code>A*x = b</code> appears to be ill-conditioned,
+         or there could be an error in Aprod1 or Aprod2.</li>
+<li>5     The iteration limit itnlim was reached.</li>
+</ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-itn"></span>
+              integer(kind=ip),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>itn</strong></td>
+            <td>
+                <p>The number of iterations performed.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-norma"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>normA</strong></td>
+            <td>
+                <p>An estimate of the Frobenius norm of Abar.
+This is the square-root of the sum of squares
+of the elements of Abar.
+If damp is small and the columns of A
+have all been scaled to have length 1.0,
+normA should increase to roughly sqrt(n).
+A radically different value for normA may
+indicate an error in Aprod1 or Aprod2.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-conda"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>condA</strong></td>
+            <td>
+                <p>An estimate of cond(Abar), the condition
+number of Abar.  A very high value of condA
+may again indicate an error in Aprod1 or Aprod2.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-normr"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>normr</strong></td>
+            <td>
+                <p>An estimate of the final value of norm(rbar),
+the function being minimized (see notation
+above).  This will be small if A*x = b has
+a solution.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-normar"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>normAr</strong></td>
+            <td>
+                <p>An estimate of the final value of
+<code>norm( Abar'*rbar )</code>, the norm of
+the residual for the normal equations.
+This should be small in all cases.  (normAr
+will often be smaller than the true value
+computed from the output vector x.)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-normx"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>normx</strong></td>
+            <td>
+                <p>An estimate of norm(x) for the final solution x.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~lsmr~~CalledByGraph Pages: 1 -->
+<svg id="proclsmrCalledByGraph" width="273pt" height="32pt"
+ viewBox="0.00 0.00 273.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~lsmr~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~lsmr~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 269,-28 269,4 -4,4"/>
+<!-- proc~lsmr -->
+<g id="proc~~lsmr~~CalledByGraph_node1" class="node">
+<title>proc~lsmr</title>
+<polygon fill="none" stroke="black" points="265,-24 159,-24 159,0 265,0 265,-24"/>
+<text text-anchor="middle" x="212" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">lsmrModule::lsmr</text>
+</g>
+<!-- proc~lsmr_ez -->
+<g id="proc~~lsmr~~CalledByGraph_node2" class="node">
+<title>proc~lsmr_ez</title>
+<g id="a_proc~~lsmr~~CalledByGraph_node2"><a xlink:href="../proc/lsmr_ez.html" xlink:title="lsmrModule::lsmr_ez">
+<polygon fill="#d9534f" stroke="#d9534f" points="123,-24 0,-24 0,0 123,0 123,-24"/>
+<text text-anchor="middle" x="61.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">lsmrModule::lsmr_ez</text>
+</a>
+</g>
+</g>
+<!-- proc~lsmr_ez&#45;&gt;proc~lsmr -->
+<g id="proc~~lsmr~~CalledByGraph_edge1" class="edge">
+<title>proc~lsmr_ez&#45;&gt;proc~lsmr</title>
+<path fill="none" stroke="#000000" d="M123.33,-12C131.64,-12 140.19,-12 148.53,-12"/>
+<polygon fill="#000000" stroke="#000000" points="148.58,-15.5 158.58,-12 148.58,-8.5 148.58,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">  </span><span class="k">subroutine </span><span class="n">lsmr</span><span class="w">  </span><span class="p">(</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">Aprod1</span><span class="p">,</span><span class="w"> </span><span class="n">Aprod2</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">damp</span><span class="p">,</span><span class="w">                    </span><span class="p">&amp;</span>
+<span class="w">                     </span><span class="n">atol</span><span class="p">,</span><span class="w"> </span><span class="n">btol</span><span class="p">,</span><span class="w"> </span><span class="n">conlim</span><span class="p">,</span><span class="w"> </span><span class="n">itnlim</span><span class="p">,</span><span class="w"> </span><span class="n">localSize</span><span class="p">,</span><span class="w"> </span><span class="n">nout</span><span class="p">,</span><span class="w">      </span><span class="p">&amp;</span>
+<span class="w">                     </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">istop</span><span class="p">,</span><span class="w"> </span><span class="n">itn</span><span class="p">,</span><span class="w"> </span><span class="n">normA</span><span class="p">,</span><span class="w"> </span><span class="n">condA</span><span class="p">,</span><span class="w"> </span><span class="n">normr</span><span class="p">,</span><span class="w"> </span><span class="n">normAr</span><span class="p">,</span><span class="w"> </span><span class="n">normx</span><span class="w"> </span><span class="p">)</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="c">!! the number of rows in A.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="c">!! the number of columns in A.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">itnlim</span><span class="w"> </span><span class="c">!! An upper limit on the number of iterations.</span>
+<span class="w">                                       </span><span class="c">!! Suggested value:</span>
+<span class="w">                                       </span><span class="c">!!</span>
+<span class="w">                                       </span><span class="c">!!  * `itnlim = n/2` for well-conditioned systems</span>
+<span class="w">                                       </span><span class="c">!!                   with clustered singular values,</span>
+<span class="w">                                       </span><span class="c">!!  * `itnlim = 4*n` otherwise.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">localSize</span><span class="w"> </span><span class="c">!! No. of vectors for local reorthogonalization:</span>
+<span class="w">                                          </span><span class="c">!!</span>
+<span class="w">                                          </span><span class="c">!!  *  0    No reorthogonalization is performed.</span>
+<span class="w">                                          </span><span class="c">!!  * &gt;0    This many n-vectors &quot;v&quot; (the most recent ones)</span>
+<span class="w">                                          </span><span class="c">!!          are saved for reorthogonalizing the next v.</span>
+<span class="w">                                          </span><span class="c">!!</span>
+<span class="w">                                          </span><span class="c">!! localSize need not be more than min(m,n).</span>
+<span class="w">                                          </span><span class="c">!! At most min(m,n) vectors will be allocated.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">nout</span><span class="w"> </span><span class="c">!! File number for printed output.  If positive,</span>
+<span class="w">                                     </span><span class="c">!! a summary will be printed on file nout.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">istop</span><span class="w"> </span><span class="c">!! An integer giving the reason for termination:</span>
+<span class="w">                                      </span><span class="c">!!</span>
+<span class="w">                                      </span><span class="c">!!  * 0     x = 0  is the exact solution.</span>
+<span class="w">                                      </span><span class="c">!!          No iterations were performed.</span>
+<span class="w">                                      </span><span class="c">!!  * 1     The equations `A*x = b` are probably compatible.</span>
+<span class="w">                                      </span><span class="c">!!          `Norm(A*x - b)` is sufficiently small, given the</span>
+<span class="w">                                      </span><span class="c">!!          values of atol and btol.</span>
+<span class="w">                                      </span><span class="c">!!  * 2     damp is zero.  The system `A*x = b` is probably</span>
+<span class="w">                                      </span><span class="c">!!          not compatible.  A least-squares solution has</span>
+<span class="w">                                      </span><span class="c">!!          been obtained that is sufficiently accurate,</span>
+<span class="w">                                      </span><span class="c">!!          given the value of atol.</span>
+<span class="w">                                      </span><span class="c">!!  * 3     damp is nonzero.  A damped least-squares</span>
+<span class="w">                                      </span><span class="c">!!          solution has been obtained that is sufficiently</span>
+<span class="w">                                      </span><span class="c">!!          accurate, given the value of atol.</span>
+<span class="w">                                      </span><span class="c">!!  * 4     An estimate of cond(Abar) has exceeded conlim.</span>
+<span class="w">                                      </span><span class="c">!!          The system `A*x = b` appears to be ill-conditioned,</span>
+<span class="w">                                      </span><span class="c">!!          or there could be an error in Aprod1 or Aprod2.</span>
+<span class="w">                                      </span><span class="c">!!  * 5     The iteration limit itnlim was reached.</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">itn</span><span class="w"> </span><span class="c">!! The number of iterations performed.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="c">!! The rhs vector `b`.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="c">!! Returns the computed solution `x`.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">atol</span><span class="w"> </span><span class="c">!! An estimate of the relative error in the data</span>
+<span class="w">                                     </span><span class="c">!! defining the matrix A.  For example, if A is</span>
+<span class="w">                                     </span><span class="c">!! accurate to about 6 digits, set atol = 1.0e-6.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">btol</span><span class="w"> </span><span class="c">!! An estimate of the relative error in the data</span>
+<span class="w">                                     </span><span class="c">!! defining the rhs b.  For example, if b is</span>
+<span class="w">                                     </span><span class="c">!! accurate to about 6 digits, set btol = 1.0e-6.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">conlim</span><span class="w"> </span><span class="c">!! An upper limit on cond(Abar), the apparent</span>
+<span class="w">                                       </span><span class="c">!! condition number of the matrix Abar.</span>
+<span class="w">                                       </span><span class="c">!! Iterations will be terminated if a computed</span>
+<span class="w">                                       </span><span class="c">!! estimate of cond(Abar) exceeds conlim.</span>
+<span class="w">                                       </span><span class="c">!! This is intended to prevent certain small or</span>
+<span class="w">                                       </span><span class="c">!! zero singular values of A or Abar from</span>
+<span class="w">                                       </span><span class="c">!! coming into effect and causing unwanted growth</span>
+<span class="w">                                       </span><span class="c">!! in the computed solution.</span>
+<span class="w">                                       </span><span class="c">!!</span>
+<span class="w">                                       </span><span class="c">!! conlim and damp may be used separately or</span>
+<span class="w">                                       </span><span class="c">!! together to regularize ill-conditioned systems.</span>
+<span class="w">                                       </span><span class="c">!!</span>
+<span class="w">                                       </span><span class="c">!! Normally, conlim should be in the range</span>
+<span class="w">                                       </span><span class="c">!! 1000 to 1/eps.</span>
+<span class="w">                                       </span><span class="c">!! Suggested value:</span>
+<span class="w">                                       </span><span class="c">!!</span>
+<span class="w">                                       </span><span class="c">!! * `conlim = 1/(100*eps)`  for compatible systems,</span>
+<span class="w">                                       </span><span class="c">!! * `conlim = 1/(10*sqrt(eps))` for least squares.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">damp</span><span class="w"> </span><span class="c">!! The damping parameter for problem 3 above.</span>
+<span class="w">                                     </span><span class="c">!! (damp should be 0.0 for problems 1 and 2.)</span>
+<span class="w">                                     </span><span class="c">!! If the system `A*x = b` is incompatible, values</span>
+<span class="w">                                     </span><span class="c">!! of damp in the range 0 to `sqrt(eps)*norm(A)`</span>
+<span class="w">                                     </span><span class="c">!! will probably have a negligible effect.</span>
+<span class="w">                                     </span><span class="c">!! Larger values of damp will tend to decrease</span>
+<span class="w">                                     </span><span class="c">!! the norm of x and reduce the number of</span>
+<span class="w">                                     </span><span class="c">!! iterations required by LSMR.</span>
+<span class="w">                                     </span><span class="c">!!</span>
+<span class="w">                                     </span><span class="c">!! The work per iteration and the storage needed</span>
+<span class="w">                                     </span><span class="c">!! by LSMR are the same for all values of damp.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">normA</span><span class="w"> </span><span class="c">!! An estimate of the Frobenius norm of Abar.</span>
+<span class="w">                                      </span><span class="c">!! This is the square-root of the sum of squares</span>
+<span class="w">                                      </span><span class="c">!! of the elements of Abar.</span>
+<span class="w">                                      </span><span class="c">!! If damp is small and the columns of A</span>
+<span class="w">                                      </span><span class="c">!! have all been scaled to have length 1.0,</span>
+<span class="w">                                      </span><span class="c">!! normA should increase to roughly sqrt(n).</span>
+<span class="w">                                      </span><span class="c">!! A radically different value for normA may</span>
+<span class="w">                                      </span><span class="c">!! indicate an error in Aprod1 or Aprod2.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">condA</span><span class="w"> </span><span class="c">!! An estimate of cond(Abar), the condition</span>
+<span class="w">                                      </span><span class="c">!! number of Abar.  A very high value of condA</span>
+<span class="w">                                      </span><span class="c">!! may again indicate an error in Aprod1 or Aprod2.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">normr</span><span class="w"> </span><span class="c">!! An estimate of the final value of norm(rbar),</span>
+<span class="w">                                      </span><span class="c">!! the function being minimized (see notation</span>
+<span class="w">                                      </span><span class="c">!! above).  This will be small if A*x = b has</span>
+<span class="w">                                      </span><span class="c">!! a solution.</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">normAr</span><span class="w"> </span><span class="c">!! An estimate of the final value of</span>
+<span class="w">                                       </span><span class="c">!! `norm( Abar&#39;*rbar )`, the norm of</span>
+<span class="w">                                       </span><span class="c">!! the residual for the normal equations.</span>
+<span class="w">                                       </span><span class="c">!! This should be small in all cases.  (normAr</span>
+<span class="w">                                       </span><span class="c">!! will often be smaller than the true value</span>
+<span class="w">                                       </span><span class="c">!! computed from the output vector x.)</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">    </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">normx</span><span class="w"> </span><span class="c">!! An estimate of norm(x) for the final solution x.</span>
+<span class="w">    </span><span class="k">procedure</span><span class="p">(</span><span class="n">Aprod1_f</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Aprod1</span><span class="w"> </span><span class="c">!! See above.</span>
+<span class="w">    </span><span class="k">procedure</span><span class="p">(</span><span class="n">Aprod2_f</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">Aprod2</span><span class="w"> </span><span class="c">!! See above.</span>
+
+<span class="w">    </span><span class="c">! Local arrays and variables</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">h</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="n">hbar</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="n">u</span><span class="p">(</span><span class="n">m</span><span class="p">),</span><span class="w"> </span><span class="n">v</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="n">localV</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">localSize</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="n">damped</span><span class="p">,</span><span class="w"> </span><span class="n">localOrtho</span><span class="p">,</span><span class="w"> </span><span class="n">localVQueueFull</span><span class="p">,</span><span class="w"> </span><span class="n">prnt</span><span class="p">,</span><span class="w"> </span><span class="n">show</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">localOrthoCount</span><span class="p">,</span><span class="w"> </span><span class="n">localOrthoLimit</span><span class="p">,</span><span class="w"> </span><span class="n">localPointer</span><span class="p">,</span><span class="w"> </span><span class="n">localVecs</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">pcount</span><span class="p">,</span><span class="w"> </span><span class="n">pfreq</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">alphabar</span><span class="p">,</span><span class="w"> </span><span class="n">alphahat</span><span class="p">,</span><span class="w">                          </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">betaacute</span><span class="p">,</span><span class="w"> </span><span class="n">betacheck</span><span class="p">,</span><span class="w"> </span><span class="n">betad</span><span class="p">,</span><span class="w"> </span><span class="n">betadd</span><span class="p">,</span><span class="w"> </span><span class="n">betahat</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">normb</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">cbar</span><span class="p">,</span><span class="w"> </span><span class="n">chat</span><span class="p">,</span><span class="w"> </span><span class="n">ctildeold</span><span class="p">,</span><span class="w"> </span><span class="n">ctol</span><span class="p">,</span><span class="w">              </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">maxrbar</span><span class="p">,</span><span class="w"> </span><span class="n">minrbar</span><span class="p">,</span><span class="w"> </span><span class="n">normA2</span><span class="p">,</span><span class="w">                        </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">rho</span><span class="p">,</span><span class="w"> </span><span class="n">rhobar</span><span class="p">,</span><span class="w"> </span><span class="n">rhobarold</span><span class="p">,</span><span class="w"> </span><span class="n">rhodold</span><span class="p">,</span><span class="w"> </span><span class="n">rhoold</span><span class="p">,</span><span class="w"> </span><span class="n">rhotemp</span><span class="p">,</span><span class="w">   </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">rhotildeold</span><span class="p">,</span><span class="w"> </span><span class="n">rtol</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">sbar</span><span class="p">,</span><span class="w"> </span><span class="n">shat</span><span class="p">,</span><span class="w"> </span><span class="n">stildeold</span><span class="p">,</span><span class="w">        </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">t1</span><span class="p">,</span><span class="w"> </span><span class="n">taud</span><span class="p">,</span><span class="w"> </span><span class="n">tautildeold</span><span class="p">,</span><span class="w"> </span><span class="n">test1</span><span class="p">,</span><span class="w"> </span><span class="n">test2</span><span class="p">,</span><span class="w"> </span><span class="n">test3</span><span class="p">,</span><span class="w">         </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">thetabar</span><span class="p">,</span><span class="w"> </span><span class="n">thetanew</span><span class="p">,</span><span class="w"> </span><span class="n">thetatilde</span><span class="p">,</span><span class="w"> </span><span class="n">thetatildeold</span><span class="p">,</span><span class="w">      </span><span class="p">&amp;</span>
+<span class="w">                   </span><span class="n">zeta</span><span class="p">,</span><span class="w"> </span><span class="n">zetabar</span><span class="p">,</span><span class="w"> </span><span class="n">zetaold</span>
+
+<span class="w">    </span><span class="c">! Local constants</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w">         </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_dp</span><span class="p">,</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0_dp</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">enter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39; Enter LSMR.  &#39;</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">exitt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39; Exit  LSMR.  &#39;</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">msg</span><span class="p">(</span><span class="mi">0</span><span class="p">:</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w">                     </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="p">(</span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;The exact solution is  x = 0                         &#39;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">         </span><span class="s1">&#39;Ax - b is small enough, given atol, btol             &#39;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">         </span><span class="s1">&#39;The least-squares solution is good enough, given atol&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">         </span><span class="s1">&#39;The estimate of cond(Abar) has exceeded conlim       &#39;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">         </span><span class="s1">&#39;Ax - b is small enough for this machine              &#39;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">         </span><span class="s1">&#39;The LS solution is good enough for this machine      &#39;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">         </span><span class="s1">&#39;Cond(Abar) seems to be too large for this machine    &#39;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">         </span><span class="s1">&#39;The iteration limit has been reached                 &#39;</span><span class="w"> </span><span class="o">/</span><span class="p">)</span>
+<span class="w">    </span><span class="c">!-------------------------------------------------------------------</span>
+
+
+<span class="w">    </span><span class="c">! Initialize.</span>
+
+<span class="w">    </span><span class="n">localVecs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">localSize</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="n">show</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">nout</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">show</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">       write</span><span class="p">(</span><span class="n">nout</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="n">enter</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">damp</span><span class="p">,</span><span class="n">atol</span><span class="p">,</span><span class="n">conlim</span><span class="p">,</span><span class="n">btol</span><span class="p">,</span><span class="n">itnlim</span><span class="p">,</span><span class="n">localVecs</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    </span><span class="n">pfreq</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="w">           </span><span class="c">! print frequency (for repeating the heading)</span>
+<span class="w">    </span><span class="n">pcount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">            </span><span class="c">! print counter</span>
+<span class="w">    </span><span class="n">damped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">damp</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="w">  </span><span class="c">!</span>
+
+<span class="w">    </span><span class="c">!-------------------------------------------------------------------</span>
+<span class="w">    </span><span class="c">! Set up the first vectors u and v for the bidiagonalization.</span>
+<span class="w">    </span><span class="c">! These satisfy  beta*u = b,  alpha*v = A(transpose)*u.</span>
+<span class="w">    </span><span class="c">!-------------------------------------------------------------------</span>
+<span class="w">    </span><span class="n">u</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">m</span><span class="p">)</span>
+<span class="w">    </span><span class="n">v</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">    </span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+
+<span class="w">    </span><span class="n">alpha</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">    </span><span class="n">beta</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nb">sqrt</span><span class="p">(</span><span class="w"> </span><span class="nb">dot_product</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">u</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">   </span><span class="c">! dnrm2 (m, u, 1)</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">beta</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">       </span><span class="n">u</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">one</span><span class="o">/</span><span class="n">beta</span><span class="p">)</span><span class="o">*</span><span class="n">u</span><span class="w">             </span><span class="c">! call dscal (m, (one/beta), u, 1)</span>
+<span class="w">       </span><span class="k">call </span><span class="n">Aprod2</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">)</span><span class="w">          </span><span class="c">! v = A&#39;*u</span>
+<span class="w">       </span><span class="n">alpha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">sqrt</span><span class="p">(</span><span class="w"> </span><span class="nb">dot_product</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="c">! dnrm2 (n, v, 1)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">alpha</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">       </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">one</span><span class="o">/</span><span class="n">alpha</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="w">                </span><span class="c">! call dscal (n, (one/alpha), v, 1)</span>
+<span class="w">       </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    </span><span class="n">normAr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span><span class="o">*</span><span class="n">beta</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">normAr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">go</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="mi">800</span>
+
+<span class="w">    </span><span class="c">! Initialization for local reorthogonalization.</span>
+
+<span class="w">    </span><span class="n">localOrtho</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">localVecs</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">       </span><span class="n">localPointer</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">       </span><span class="n">localOrtho</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">       </span><span class="n">localVQueueFull</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">       </span><span class="n">localV</span><span class="p">(:,</span><span class="mi">1</span><span class="p">)</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">v</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="w">    </span><span class="c">! Initialize variables for 1st iteration.</span>
+
+<span class="w">    </span><span class="n">itn</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">zetabar</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span><span class="o">*</span><span class="n">beta</span>
+<span class="w">    </span><span class="n">alphabar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span>
+<span class="w">    </span><span class="n">rho</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">rhobar</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">cbar</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">sbar</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+
+<span class="w">    </span><span class="n">h</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">v</span>
+<span class="w">    </span><span class="n">hbar</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">    </span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">)</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+
+<span class="w">    </span><span class="c">! Initialize variables for estimation of ||r||.</span>
+
+<span class="w">    </span><span class="n">betadd</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">beta</span>
+<span class="w">    </span><span class="n">betad</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">rhodold</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">tautildeold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">thetatilde</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">zeta</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">d</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+
+<span class="w">    </span><span class="c">! Initialize variables for estimation of ||A|| and cond(A).</span>
+
+<span class="w">    </span><span class="n">normA2</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span><span class="o">**</span><span class="mi">2</span>
+<span class="w">    </span><span class="n">maxrbar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_dp</span>
+<span class="w">    </span><span class="n">minrbar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1e+100_dp</span>
+
+<span class="w">    </span><span class="c">! Items for use in stopping rules.</span>
+<span class="w">    </span><span class="n">normb</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">beta</span>
+<span class="w">    </span><span class="n">istop</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">ctol</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">conlim</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="n">ctol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="o">/</span><span class="n">conlim</span>
+<span class="w">    </span><span class="n">normr</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">beta</span>
+
+<span class="w">    </span><span class="c">! Exit if b=0 or A&#39;b = 0.</span>
+
+<span class="w">    </span><span class="n">normAr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">beta</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">normAr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">       if</span><span class="w"> </span><span class="p">(</span><span class="n">show</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">          write</span><span class="p">(</span><span class="n">nout</span><span class="p">,</span><span class="s1">&#39;(a)&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">msg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">       </span><span class="k">end if</span>
+<span class="k">       return</span>
+<span class="k">    end if</span>
+
+<span class="w">    </span><span class="c">! Heading for iteration log.</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">show</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">       if</span><span class="w"> </span><span class="p">(</span><span class="n">damped</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">          write</span><span class="p">(</span><span class="n">nout</span><span class="p">,</span><span class="mi">1300</span><span class="p">)</span>
+<span class="w">       </span><span class="k">else</span>
+<span class="k">          write</span><span class="p">(</span><span class="n">nout</span><span class="p">,</span><span class="mi">1200</span><span class="p">)</span>
+<span class="w">       </span><span class="k">end if</span>
+<span class="k">       </span><span class="n">test1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span>
+<span class="w">       </span><span class="n">test2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span><span class="o">/</span><span class="n">beta</span>
+<span class="w">       </span><span class="k">write</span><span class="p">(</span><span class="n">nout</span><span class="p">,</span><span class="w"> </span><span class="mi">1500</span><span class="p">)</span><span class="w"> </span><span class="n">itn</span><span class="p">,</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">normr</span><span class="p">,</span><span class="n">normAr</span><span class="p">,</span><span class="n">test1</span><span class="p">,</span><span class="n">test2</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="w">    </span><span class="c">!===================================================================</span>
+<span class="w">    </span><span class="c">! Main iteration loop.</span>
+<span class="w">    </span><span class="c">!===================================================================</span>
+<span class="w">    </span><span class="k">do</span>
+<span class="k">       </span><span class="n">itn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">itn</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">       </span><span class="c">!----------------------------------------------------------------</span>
+<span class="w">       </span><span class="c">! Perform the next step of the bidiagonalization to obtain the</span>
+<span class="w">       </span><span class="c">! next beta, u, alpha, v.  These satisfy</span>
+<span class="w">       </span><span class="c">!     beta*u = A*v  - alpha*u,</span>
+<span class="w">       </span><span class="c">!    alpha*v = A&#39;*u -  beta*v.</span>
+<span class="w">       </span><span class="c">!----------------------------------------------------------------</span>
+<span class="w">       </span><span class="n">u</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="p">)</span><span class="o">*</span><span class="n">u</span><span class="w">                </span><span class="c">! call dscal (m,(- alpha), u, 1)</span>
+<span class="w">       </span><span class="k">call </span><span class="n">Aprod1</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">)</span><span class="w">             </span><span class="c">! u = u + A*v</span>
+<span class="w">       </span><span class="n">beta</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nb">sqrt</span><span class="p">(</span><span class="w"> </span><span class="nb">dot_product</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">u</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">   </span><span class="c">! dnrm2 (m, u, 1)</span>
+
+<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">beta</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">          </span><span class="n">u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">one</span><span class="o">/</span><span class="n">beta</span><span class="p">)</span><span class="o">*</span><span class="n">u</span><span class="w">        </span><span class="c">! call dscal (m, (one/beta), u, 1)</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">localOrtho</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">    </span><span class="c">! Store v into the circular buffer localV.</span>
+<span class="w">             </span><span class="k">call </span><span class="n">localVEnqueue</span><span class="w">   </span><span class="c">! Store old v for local reorthog&#39;n of new v.</span>
+<span class="w">          </span><span class="k">end if</span>
+<span class="k">          </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="w"> </span><span class="n">beta</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="w">          </span><span class="c">! call dscal (n, (- beta), v, 1)</span>
+
+<span class="w">          </span><span class="k">call </span><span class="n">Aprod2</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">)</span><span class="w">          </span><span class="c">! v = v + A&#39;*u</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">localOrtho</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">    </span><span class="c">! Perform local reorthogonalization of V.</span>
+<span class="w">             </span><span class="k">call </span><span class="n">localVOrtho</span><span class="w">     </span><span class="c">! Local-reorthogonalization of new v.</span>
+<span class="w">          </span><span class="k">end if</span>
+<span class="k">          </span><span class="n">alpha</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">sqrt</span><span class="p">(</span><span class="w"> </span><span class="nb">dot_product</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="c">! dnrm2 (n, v, 1)</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">alpha</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">             </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">one</span><span class="o">/</span><span class="n">alpha</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="w">    </span><span class="c">! call dscal (n, (one/alpha), v, 1)</span>
+<span class="w">          </span><span class="k">end if</span>
+<span class="k">       end if</span>
+
+<span class="w">       </span><span class="c">! At this point, beta = beta_{k+1}, alpha = alpha_{k+1}.</span>
+
+<span class="w">       </span><span class="c">!----------------------------------------------------------------</span>
+<span class="w">       </span><span class="c">! Construct rotation Qhat_{k,2k+1}.</span>
+
+<span class="w">       </span><span class="n">alphahat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d2norm</span><span class="p">(</span><span class="n">alphabar</span><span class="p">,</span><span class="w"> </span><span class="n">damp</span><span class="p">)</span>
+<span class="w">       </span><span class="n">chat</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">alphabar</span><span class="o">/</span><span class="n">alphahat</span>
+<span class="w">       </span><span class="n">shat</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">damp</span><span class="o">/</span><span class="n">alphahat</span>
+
+<span class="w">       </span><span class="c">! Use a plane rotation (Q_i) to turn B_i to R_i.</span>
+
+<span class="w">       </span><span class="n">rhoold</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">rho</span>
+<span class="w">       </span><span class="n">rho</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">d2norm</span><span class="p">(</span><span class="n">alphahat</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">)</span>
+<span class="w">       </span><span class="n">c</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">alphahat</span><span class="o">/</span><span class="n">rho</span>
+<span class="w">       </span><span class="n">s</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">beta</span><span class="o">/</span><span class="n">rho</span>
+<span class="w">       </span><span class="n">thetanew</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="o">*</span><span class="n">alpha</span>
+<span class="w">       </span><span class="n">alphabar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="o">*</span><span class="n">alpha</span>
+
+<span class="w">       </span><span class="c">! Use a plane rotation (Qbar_i) to turn R_i^T into R_i^bar.</span>
+
+<span class="w">       </span><span class="n">rhobarold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rhobar</span>
+<span class="w">       </span><span class="n">zetaold</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">zeta</span>
+<span class="w">       </span><span class="n">thetabar</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">sbar</span><span class="o">*</span><span class="n">rho</span>
+<span class="w">       </span><span class="n">rhotemp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">cbar</span><span class="o">*</span><span class="n">rho</span>
+<span class="w">       </span><span class="n">rhobar</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">d2norm</span><span class="p">(</span><span class="n">cbar</span><span class="o">*</span><span class="n">rho</span><span class="p">,</span><span class="w"> </span><span class="n">thetanew</span><span class="p">)</span>
+<span class="w">       </span><span class="n">cbar</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">cbar</span><span class="o">*</span><span class="n">rho</span><span class="o">/</span><span class="n">rhobar</span>
+<span class="w">       </span><span class="n">sbar</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">thetanew</span><span class="o">/</span><span class="n">rhobar</span>
+<span class="w">       </span><span class="n">zeta</span><span class="w">      </span><span class="o">=</span><span class="w">   </span><span class="n">cbar</span><span class="o">*</span><span class="n">zetabar</span>
+<span class="w">       </span><span class="n">zetabar</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">sbar</span><span class="o">*</span><span class="n">zetabar</span>
+
+<span class="w">       </span><span class="c">! Update h, h_hat, x.</span>
+
+<span class="w">       </span><span class="n">hbar</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">thetabar</span><span class="o">*</span><span class="n">rho</span><span class="o">/</span><span class="p">(</span><span class="n">rhoold</span><span class="o">*</span><span class="n">rhobarold</span><span class="p">))</span><span class="o">*</span><span class="n">hbar</span>
+<span class="w">       </span><span class="n">x</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">zeta</span><span class="o">/</span><span class="p">(</span><span class="n">rho</span><span class="o">*</span><span class="n">rhobar</span><span class="p">))</span><span class="o">*</span><span class="n">hbar</span>
+<span class="w">       </span><span class="n">h</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">thetanew</span><span class="o">/</span><span class="n">rho</span><span class="p">)</span><span class="o">*</span><span class="n">h</span>
+
+<span class="w">       </span><span class="c">! Estimate ||r||.</span>
+
+<span class="w">       </span><span class="c">! Apply rotation Qhat_{k,2k+1}.</span>
+<span class="w">       </span><span class="n">betaacute</span><span class="w"> </span><span class="o">=</span><span class="w">   </span><span class="n">chat</span><span class="o">*</span><span class="w"> </span><span class="n">betadd</span>
+<span class="w">       </span><span class="n">betacheck</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">shat</span><span class="o">*</span><span class="w"> </span><span class="n">betadd</span>
+
+<span class="w">       </span><span class="c">! Apply rotation Q_{k,k+1}.</span>
+<span class="w">       </span><span class="n">betahat</span><span class="w">   </span><span class="o">=</span><span class="w">   </span><span class="n">c</span><span class="o">*</span><span class="n">betaacute</span>
+<span class="w">       </span><span class="n">betadd</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">s</span><span class="o">*</span><span class="n">betaacute</span>
+
+<span class="w">       </span><span class="c">! Apply rotation Qtilde_{k-1}.</span>
+<span class="w">       </span><span class="c">! betad = betad_{k-1} here.</span>
+
+<span class="w">       </span><span class="n">thetatildeold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thetatilde</span>
+<span class="w">       </span><span class="n">rhotildeold</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">d2norm</span><span class="p">(</span><span class="n">rhodold</span><span class="p">,</span><span class="w"> </span><span class="n">thetabar</span><span class="p">)</span>
+<span class="w">       </span><span class="n">ctildeold</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">rhodold</span><span class="o">/</span><span class="n">rhotildeold</span>
+<span class="w">       </span><span class="n">stildeold</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">thetabar</span><span class="o">/</span><span class="n">rhotildeold</span>
+<span class="w">       </span><span class="n">thetatilde</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">stildeold</span><span class="o">*</span><span class="w"> </span><span class="n">rhobar</span>
+<span class="w">       </span><span class="n">rhodold</span><span class="w">       </span><span class="o">=</span><span class="w">   </span><span class="n">ctildeold</span><span class="o">*</span><span class="w"> </span><span class="n">rhobar</span>
+<span class="w">       </span><span class="n">betad</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">stildeold</span><span class="o">*</span><span class="n">betad</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ctildeold</span><span class="o">*</span><span class="n">betahat</span>
+
+<span class="w">       </span><span class="c">! betad   = betad_k here.</span>
+<span class="w">       </span><span class="c">! rhodold = rhod_k  here.</span>
+
+<span class="w">       </span><span class="n">tautildeold</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">zetaold</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">thetatildeold</span><span class="o">*</span><span class="n">tautildeold</span><span class="p">)</span><span class="o">/</span><span class="n">rhotildeold</span>
+<span class="w">       </span><span class="n">taud</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">zeta</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">thetatilde</span><span class="o">*</span><span class="n">tautildeold</span><span class="p">)</span><span class="o">/</span><span class="n">rhodold</span>
+<span class="w">       </span><span class="n">d</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">betacheck</span><span class="o">**</span><span class="mi">2</span>
+<span class="w">       </span><span class="n">normr</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">sqrt</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">betad</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">taud</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">betadd</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="w">       </span><span class="c">! Estimate ||A||.</span>
+<span class="w">       </span><span class="n">normA2</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">normA2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">beta</span><span class="o">**</span><span class="mi">2</span>
+<span class="w">       </span><span class="n">normA</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">sqrt</span><span class="p">(</span><span class="n">normA2</span><span class="p">)</span>
+<span class="w">       </span><span class="n">normA2</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">normA2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">alpha</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="w">       </span><span class="c">! Estimate cond(A).</span>
+<span class="w">       </span><span class="n">maxrbar</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">maxrbar</span><span class="p">,</span><span class="n">rhobarold</span><span class="p">)</span>
+<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">itn</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">          </span><span class="n">minrbar</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">minrbar</span><span class="p">,</span><span class="n">rhobarold</span><span class="p">)</span>
+<span class="w">       </span><span class="k">end if</span>
+<span class="k">       </span><span class="n">condA</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">maxrbar</span><span class="p">,</span><span class="n">rhotemp</span><span class="p">)</span><span class="o">/</span><span class="nb">min</span><span class="p">(</span><span class="n">minrbar</span><span class="p">,</span><span class="n">rhotemp</span><span class="p">)</span>
+
+<span class="w">       </span><span class="c">!----------------------------------------------------------------</span>
+<span class="w">       </span><span class="c">! Test for convergence.</span>
+<span class="w">       </span><span class="c">!----------------------------------------------------------------</span>
+
+<span class="w">       </span><span class="c">! Compute norms for convergence testing.</span>
+<span class="w">       </span><span class="n">normAr</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">zetabar</span><span class="p">)</span>
+<span class="w">       </span><span class="n">normx</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nb">sqrt</span><span class="p">(</span><span class="w"> </span><span class="nb">dot_product</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w">   </span><span class="c">! dnrm2(n, x, 1)</span>
+
+<span class="w">       </span><span class="c">! Now use these norms to estimate certain other quantities,</span>
+<span class="w">       </span><span class="c">! some of which will be small near a solution.</span>
+
+<span class="w">       </span><span class="n">test1</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">normr</span><span class="w"> </span><span class="o">/</span><span class="n">normb</span>
+<span class="w">       </span><span class="n">test2</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">normAr</span><span class="o">/</span><span class="p">(</span><span class="n">normA</span><span class="o">*</span><span class="n">normr</span><span class="p">)</span>
+<span class="w">       </span><span class="n">test3</span><span class="w">   </span><span class="o">=</span><span class="w">    </span><span class="n">one</span><span class="o">/</span><span class="n">condA</span>
+<span class="w">       </span><span class="n">t1</span><span class="w">      </span><span class="o">=</span><span class="w">  </span><span class="n">test1</span><span class="o">/</span><span class="p">(</span><span class="n">one</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">normA</span><span class="o">*</span><span class="n">normx</span><span class="o">/</span><span class="n">normb</span><span class="p">)</span>
+<span class="w">       </span><span class="n">rtol</span><span class="w">    </span><span class="o">=</span><span class="w">   </span><span class="n">btol</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">atol</span><span class="o">*</span><span class="n">normA</span><span class="o">*</span><span class="n">normx</span><span class="o">/</span><span class="n">normb</span>
+
+<span class="w">       </span><span class="c">! The following tests guard against extremely small values of</span>
+<span class="w">       </span><span class="c">! atol, btol or ctol.  (The user may have set any or all of</span>
+<span class="w">       </span><span class="c">! the parameters atol, btol, conlim  to 0.)</span>
+<span class="w">       </span><span class="c">! The effect is equivalent to the normAl tests using</span>
+<span class="w">       </span><span class="c">! atol = eps,  btol = eps,  conlim = 1/eps.</span>
+
+<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">itn</span><span class="w">     </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">itnlim</span><span class="p">)</span><span class="w"> </span><span class="n">istop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">one</span><span class="o">+</span><span class="n">test3</span><span class="w"> </span><span class="o">&lt;=</span><span class="w">  </span><span class="n">one</span><span class="p">)</span><span class="w"> </span><span class="n">istop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">one</span><span class="o">+</span><span class="n">test2</span><span class="w"> </span><span class="o">&lt;=</span><span class="w">  </span><span class="n">one</span><span class="p">)</span><span class="w"> </span><span class="n">istop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">one</span><span class="o">+</span><span class="n">t1</span><span class="w">    </span><span class="o">&lt;=</span><span class="w">  </span><span class="n">one</span><span class="p">)</span><span class="w"> </span><span class="n">istop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+
+<span class="w">       </span><span class="c">! Allow for tolerances set by the user.</span>
+
+<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w">  </span><span class="n">test3</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">ctol</span><span class="p">)</span><span class="w"> </span><span class="n">istop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w">  </span><span class="n">test2</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">atol</span><span class="p">)</span><span class="w"> </span><span class="n">istop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w">  </span><span class="n">test1</span><span class="w">   </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">rtol</span><span class="p">)</span><span class="w"> </span><span class="n">istop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">       </span><span class="c">!----------------------------------------------------------------</span>
+<span class="w">       </span><span class="c">! See if it is time to print something.</span>
+<span class="w">       </span><span class="c">!----------------------------------------------------------------</span>
+<span class="w">       </span><span class="n">prnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">       </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">show</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">          if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w">     </span><span class="o">&lt;=</span><span class="w">        </span><span class="mi">40</span><span class="p">)</span><span class="w"> </span><span class="n">prnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">itn</span><span class="w">   </span><span class="o">&lt;=</span><span class="w">        </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="n">prnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">itn</span><span class="w">   </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">itnlim</span><span class="o">-</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="n">prnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">mod</span><span class="p">(</span><span class="n">itn</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span><span class="w">  </span><span class="o">==</span><span class="w">  </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">prnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">test3</span><span class="w"> </span><span class="o">&lt;=</span><span class="w">  </span><span class="mf">1.1</span><span class="o">*</span><span class="n">ctol</span><span class="p">)</span><span class="w"> </span><span class="n">prnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">test2</span><span class="w"> </span><span class="o">&lt;=</span><span class="w">  </span><span class="mf">1.1</span><span class="o">*</span><span class="n">atol</span><span class="p">)</span><span class="w"> </span><span class="n">prnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">test1</span><span class="w"> </span><span class="o">&lt;=</span><span class="w">  </span><span class="mf">1.1</span><span class="o">*</span><span class="n">rtol</span><span class="p">)</span><span class="w"> </span><span class="n">prnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">istop</span><span class="w"> </span><span class="o">/=</span><span class="w">         </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">prnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">prnt</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">        </span><span class="c">! Print a line for this iteration</span>
+<span class="w">             </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pcount</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">pfreq</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c">! Print a heading first</span>
+<span class="w">                </span><span class="n">pcount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">damped</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                   write</span><span class="p">(</span><span class="n">nout</span><span class="p">,</span><span class="mi">1300</span><span class="p">)</span>
+<span class="w">                </span><span class="k">else</span>
+<span class="k">                   write</span><span class="p">(</span><span class="n">nout</span><span class="p">,</span><span class="mi">1200</span><span class="p">)</span>
+<span class="w">                </span><span class="k">end if</span>
+<span class="k">             end if</span>
+<span class="k">             </span><span class="n">pcount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pcount</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">             </span><span class="k">write</span><span class="p">(</span><span class="n">nout</span><span class="p">,</span><span class="mi">1500</span><span class="p">)</span><span class="w"> </span><span class="n">itn</span><span class="p">,</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">normr</span><span class="p">,</span><span class="n">normAr</span><span class="p">,</span><span class="n">test1</span><span class="p">,</span><span class="n">test2</span><span class="p">,</span><span class="n">normA</span><span class="p">,</span><span class="n">condA</span>
+<span class="w">          </span><span class="k">end if</span>
+<span class="k">       end if</span>
+
+<span class="k">       if</span><span class="w"> </span><span class="p">(</span><span class="n">istop</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">    end do</span>
+<span class="w">    </span><span class="c">!===================================================================</span>
+<span class="w">    </span><span class="c">! End of iteration loop.</span>
+<span class="w">    </span><span class="c">!===================================================================</span>
+
+<span class="w">    </span><span class="c">! Come here if normAr = 0, or if normal exit.</span>
+
+<span class="mi">800</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">show</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">                      </span><span class="c">! Print the stopping condition.</span>
+<span class="w">       </span><span class="k">write</span><span class="p">(</span><span class="n">nout</span><span class="p">,</span><span class="w"> </span><span class="mi">2000</span><span class="p">)</span><span class="w">                </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="n">exitt</span><span class="p">,</span><span class="n">istop</span><span class="p">,</span><span class="n">itn</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="n">exitt</span><span class="p">,</span><span class="n">normA</span><span class="p">,</span><span class="n">condA</span><span class="p">,</span><span class="w">          </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="n">exitt</span><span class="p">,</span><span class="n">normb</span><span class="p">,</span><span class="w"> </span><span class="n">normx</span><span class="p">,</span><span class="w">         </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="n">exitt</span><span class="p">,</span><span class="n">normr</span><span class="p">,</span><span class="n">normAr</span>
+<span class="w">       </span><span class="k">write</span><span class="p">(</span><span class="n">nout</span><span class="p">,</span><span class="w"> </span><span class="mi">3000</span><span class="p">)</span><span class="w">                </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="n">exitt</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">(</span><span class="n">istop</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    return</span>
+
+<span class="k"> </span><span class="mi">1000</span><span class="w"> </span><span class="k">format</span><span class="p">(</span><span class="o">//</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;     Least-squares solution of  Ax = b&#39;</span><span class="w">       </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39; The matrix  A  has&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">i7</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39; rows   and&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">i7</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39; columns&#39;</span><span class="w">  </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39; damp   =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">es22</span><span class="p">.</span><span class="mi">14</span><span class="w">                                      </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39; atol   =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">es10</span><span class="p">.</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="n">x</span><span class="p">,</span><span class="w">        </span><span class="s1">&#39;conlim =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">es10</span><span class="p">.</span><span class="mi">2</span><span class="w">       </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39; btol   =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">es10</span><span class="p">.</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="n">x</span><span class="p">,</span><span class="w">        </span><span class="s1">&#39;itnlim =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">i10</span><span class="w">          </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39; localSize (no. of vectors for local reorthogonalization) =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">i7</span><span class="p">)</span>
+<span class="w"> </span><span class="mi">1200</span><span class="w"> </span><span class="k">format</span><span class="p">(</span><span class="o">/</span><span class="w"> </span><span class="s2">&quot;   Itn       x(1)            norm r         A&#39;r   &quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="s1">&#39; Compatible    LS      norm A    cond A&#39;</span><span class="p">)</span>
+<span class="w"> </span><span class="mi">1300</span><span class="w"> </span><span class="k">format</span><span class="p">(</span><span class="o">/</span><span class="w"> </span><span class="s2">&quot;   Itn       x(1)           norm rbar    Abar&#39;rbar&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="s1">&#39; Compatible    LS    norm Abar cond Abar&#39;</span><span class="p">)</span>
+<span class="w"> </span><span class="mi">1500</span><span class="w"> </span><span class="k">format</span><span class="p">(</span><span class="n">i6</span><span class="p">,</span><span class="w"> </span><span class="err">2</span><span class="n">es17</span><span class="p">.</span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="err">5</span><span class="n">es10</span><span class="p">.</span><span class="mi">2</span><span class="p">)</span>
+<span class="w"> </span><span class="mi">2000</span><span class="w"> </span><span class="k">format</span><span class="p">(</span><span class="o">/</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;istop  =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">i2</span><span class="p">,</span><span class="w">   </span><span class="mi">15</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;itn    =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">i8</span><span class="w">      </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="o">/</span><span class="w">      </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;normA  =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">es12</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;condA  =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">es12</span><span class="p">.</span><span class="mi">5</span><span class="w">   </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="o">/</span><span class="w">      </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;normb  =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">es12</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;normx  =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">es12</span><span class="p">.</span><span class="mi">5</span><span class="w">   </span><span class="p">&amp;</span>
+<span class="w">      </span><span class="o">/</span><span class="w">      </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;normr  =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">es12</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;normAr =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">es12</span><span class="p">.</span><span class="mi">5</span><span class="p">)</span>
+<span class="w"> </span><span class="mi">3000</span><span class="w"> </span><span class="k">format</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+
+<span class="w">  </span><span class="k">contains</span>
+
+<span class="k">    function </span><span class="n">d2norm</span><span class="p">(</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">)</span>
+
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w">             </span><span class="kd">::</span><span class="w"> </span><span class="n">d2norm</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span>
+
+<span class="w">      </span><span class="c">!-------------------------------------------------------------------</span>
+<span class="w">      </span><span class="c">! d2norm returns sqrt( a**2 + b**2 )</span>
+<span class="w">      </span><span class="c">! with precautions to avoid overflow.</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">! 21 Mar 1990: First version.</span>
+<span class="w">      </span><span class="c">! 17 Sep 2007: Fortran 90 version.</span>
+<span class="w">      </span><span class="c">! 24 Oct 2007: User real(dp) instead of compiler option -r8.</span>
+<span class="w">      </span><span class="c">!-------------------------------------------------------------------</span>
+
+<span class="w">      </span><span class="k">intrinsic</span><span class="w">            </span><span class="kd">::</span><span class="w"> </span><span class="nb">abs</span><span class="p">,</span><span class="w"> </span><span class="nb">sqrt</span>
+<span class="nb">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w">             </span><span class="kd">::</span><span class="w"> </span><span class="nb">scale</span>
+<span class="nb">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_dp</span>
+
+<span class="w">      </span><span class="nb">scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">scale</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">d2norm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         </span><span class="n">d2norm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">scale</span><span class="o">*</span><span class="nb">sqrt</span><span class="p">((</span><span class="n">a</span><span class="o">/</span><span class="nb">scale</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="o">/</span><span class="nb">scale</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end if</span>
+
+<span class="k">    end function </span><span class="n">d2norm</span>
+
+<span class="w">    </span><span class="c">!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+
+<span class="w">    </span><span class="k">subroutine </span><span class="n">localVEnqueue</span>
+
+<span class="w">      </span><span class="c">! Store v into the circular buffer localV.</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">localPointer</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">localVecs</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">localPointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">localPointer</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         </span><span class="n">localPointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="n">localVQueueFull</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">      </span><span class="k">end if</span>
+<span class="k">      </span><span class="n">localV</span><span class="p">(:,</span><span class="n">localPointer</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">localVEnqueue</span>
+
+<span class="w">    </span><span class="c">!+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+
+<span class="w">    </span><span class="k">subroutine </span><span class="n">localVOrtho</span>
+
+<span class="w">      </span><span class="c">! Perform local reorthogonalization of current v.</span>
+
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">d</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">localVQueueFull</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">localOrthoLimit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">localVecs</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         </span><span class="n">localOrthoLimit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">localPointer</span>
+<span class="w">      </span><span class="k">end if</span>
+
+<span class="k">      do </span><span class="n">localOrthoCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">localOrthoLimit</span>
+<span class="w">         </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">dot_product</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">localV</span><span class="p">(:,</span><span class="n">localOrthoCount</span><span class="p">))</span>
+<span class="w">         </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="w">    </span><span class="o">-</span><span class="w">    </span><span class="n">d</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">localV</span><span class="p">(:,</span><span class="n">localOrthoCount</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end do</span>
+
+<span class="k">    end subroutine </span><span class="n">localVOrtho</span>
+
+<span class="w">  </span><span class="k">end subroutine </span><span class="n">lsmr</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col"><p>LSMR was developed by Jacob Williams<br>&copy; 2024 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
+
+    <!-- MathJax JavaScript
+             ================================================== -->
+             <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+          });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+          <script src="../tipuesearch/tipuesearch_content.js"></script>
+          <script src="../tipuesearch/tipuesearch_set.js"></script>
+          <script src="../tipuesearch/tipuesearch.js"></script>
+
+  </body>
+</html>

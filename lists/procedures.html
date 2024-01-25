@@ -1,0 +1,301 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="LSMR: Sparse Equations and Least Squares">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>All Procedures &ndash; LSMR
+</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">LSMR </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12" id='text'>
+			 <h1>Procedures</h1>
+			 <table class="table table-striped">
+			 <thead><tr><th>Procedure</th><th>Location</th><th>Procedure Type</th><th>Description</th></tr></thead>
+			 <tbody>
+			   <tr>
+                 <td><a href='../proc/dcopy.html'>dcopy</a></td>
+                 <td><a href='../module/lsmrblas.html'>lsmrblas</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Copies a vector X to a vector Y.</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/ddot.html'>ddot</a></td>
+                 <td><a href='../module/lsmrblas.html'>lsmrblas</a></td>
+                 <td>Function</td>
+                 <td><p>Dot product of two vectors.</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/dnrm2.html'>dnrm2</a></td>
+                 <td><a href='../module/lsmrblas.html'>lsmrblas</a></td>
+                 <td>Function</td>
+                 <td><p>The euclidean norm of a vector <code>sqrt ( X' * X )</code>.</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/dscal.html'>dscal</a></td>
+                 <td><a href='../module/lsmrblas.html'>lsmrblas</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Scales a vector by a constant.</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/lsmr.html'>lsmr</a></td>
+                 <td><a href='../module/lsmrmodule.html'>lsmrModule</a></td>
+                 <td>Subroutine</td>
+                 <td><p>LSMR finds a solution x to the following problems:</p><a href="../proc/lsmr.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/lsmr_ez.html'>lsmr_ez</a></td>
+                 <td><a href='../module/lsmrmodule.html'>lsmrModule</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Easy interface to <a href="../proc/lsmr.html">lsmr</a>.</p><a href="../proc/lsmr_ez.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			 </tbody></table>
+             <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: call~~graph~~CallGraph Pages: 1 -->
+<svg id="callgraphCallGraph" width="273pt" height="200pt"
+ viewBox="0.00 0.00 273.00 200.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="call~~graph~~CallGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 196)">
+<title>call~~graph~~CallGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-196 269,-196 269,4 -4,4"/>
+<!-- proc~dcopy -->
+<g id="call~~graph~~CallGraph_node1" class="node">
+<title>proc~dcopy</title>
+<g id="a_call~~graph~~CallGraph_node1"><a xlink:href="../proc/dcopy.html" xlink:title="lsmrblas::dcopy">
+<polygon fill="#d9534f" stroke="#d9534f" points="110,-24 13,-24 13,0 110,0 110,-24"/>
+<text text-anchor="middle" x="61.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">lsmrblas::dcopy</text>
+</a>
+</g>
+</g>
+<!-- proc~ddot -->
+<g id="call~~graph~~CallGraph_node2" class="node">
+<title>proc~ddot</title>
+<g id="a_call~~graph~~CallGraph_node2"><a xlink:href="../proc/ddot.html" xlink:title="lsmrblas::ddot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="106,-66 17,-66 17,-42 106,-42 106,-66"/>
+<text text-anchor="middle" x="61.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">lsmrblas::ddot</text>
+</a>
+</g>
+</g>
+<!-- proc~dnrm2 -->
+<g id="call~~graph~~CallGraph_node3" class="node">
+<title>proc~dnrm2</title>
+<g id="a_call~~graph~~CallGraph_node3"><a xlink:href="../proc/dnrm2.html" xlink:title="lsmrblas::dnrm2">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="111.5,-108 11.5,-108 11.5,-84 111.5,-84 111.5,-108"/>
+<text text-anchor="middle" x="61.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">lsmrblas::dnrm2</text>
+</a>
+</g>
+</g>
+<!-- proc~dscal -->
+<g id="call~~graph~~CallGraph_node4" class="node">
+<title>proc~dscal</title>
+<g id="a_call~~graph~~CallGraph_node4"><a xlink:href="../proc/dscal.html" xlink:title="lsmrblas::dscal">
+<polygon fill="#d9534f" stroke="#d9534f" points="108,-150 15,-150 15,-126 108,-126 108,-150"/>
+<text text-anchor="middle" x="61.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">lsmrblas::dscal</text>
+</a>
+</g>
+</g>
+<!-- proc~lsmr -->
+<g id="call~~graph~~CallGraph_node5" class="node">
+<title>proc~lsmr</title>
+<g id="a_call~~graph~~CallGraph_node5"><a xlink:href="../proc/lsmr.html" xlink:title="lsmrModule::lsmr">
+<polygon fill="#d9534f" stroke="#d9534f" points="265,-192 159,-192 159,-168 265,-168 265,-192"/>
+<text text-anchor="middle" x="212" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">lsmrModule::lsmr</text>
+</a>
+</g>
+</g>
+<!-- proc~lsmr_ez -->
+<g id="call~~graph~~CallGraph_node6" class="node">
+<title>proc~lsmr_ez</title>
+<g id="a_call~~graph~~CallGraph_node6"><a xlink:href="../proc/lsmr_ez.html" xlink:title="lsmrModule::lsmr_ez">
+<polygon fill="#d9534f" stroke="#d9534f" points="123,-192 0,-192 0,-168 123,-168 123,-192"/>
+<text text-anchor="middle" x="61.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">lsmrModule::lsmr_ez</text>
+</a>
+</g>
+</g>
+<!-- proc~lsmr_ez&#45;&gt;proc~lsmr -->
+<g id="call~~graph~~CallGraph_edge1" class="edge">
+<title>proc~lsmr_ez&#45;&gt;proc~lsmr</title>
+<path fill="none" stroke="#000000" d="M123.33,-180C131.64,-180 140.19,-180 148.53,-180"/>
+<polygon fill="#000000" stroke="#000000" points="148.58,-183.5 158.58,-180 148.58,-176.5 148.58,-183.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1.16 1.16) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col"><p>LSMR was developed by Jacob Williams<br>&copy; 2024 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
+
+    <!-- MathJax JavaScript
+             ================================================== -->
+             <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+          });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+          <script src="../tipuesearch/tipuesearch_content.js"></script>
+          <script src="../tipuesearch/tipuesearch_set.js"></script>
+          <script src="../tipuesearch/tipuesearch.js"></script>
+
+  </body>
+</html>

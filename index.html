@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="LSMR: Sparse Equations and Least Squares">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="./favicon.png">
+
+    <title> LSMR </title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="./css/pygments.css" rel="stylesheet">
+    <link href="./css/font-awesome.min.css" rel="stylesheet">
+    <link href="./css/local.css" rel="stylesheet">
+      <link  href="./tipuesearch/tipuesearch.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="./js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="./index.html">LSMR </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="./lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/absint.html">Abstract Interfaces</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="./search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="p-5 mb-4 bg-light border rounded-3" id="jumbotron">
+        <p>LSMR: Sparse Equations and Least Squares</p>
+	<p> Find us on&hellip;</p>
+        <p>
+          <a class="btn btn-lg btn-primary" href="https://github.com/jacobwilliams/LSMR" role="button">GitHub</a>
+        </p>
+      </div>
+
+      <div class="row" id='text'>
+        <div class=col-md-8>
+          <h1>LSMR</h1>
+          <p>LSMR: Sparse Equations and Least Squares</p>
+<h3>Status</h3>
+<p><a href="https://github.com/jacobwilliams/LSMR/releases/latest"><img alt="GitHub release" src="https://img.shields.io/github/release/jacobwilliams/LSMR.svg"></a>
+<a href="https://github.com/jacobwilliams/LSMR/actions"><img alt="CI Status" src="https://github.com/jacobwilliams/LSMR/actions/workflows/CI.yml/badge.svg"></a>
+<a href="https://codecov.io/gh/jacobwilliams/LSMR"><img alt="codecov" src="https://codecov.io/gh/jacobwilliams/LSMR/branch/master/graph/badge.svg"></a>
+<a href="https://github.com/jacobwilliams/LSMR/commits/master"><img alt="last-commit" src="https://img.shields.io/github/last-commit/jacobwilliams/LSMR"></a></p>
+<h3>Readme</h3>
+<p>README for lsmrf90</p>
+<p>The software for LSMR (f90 version) is provided by SOL, Stanford University
+under the terms of the OSI Common Public License (CPL)
+   http://www.opensource.org/licenses/cpl1.0.php
+or the BSD License
+   http://www.opensource.org/licenses/bsd-license.php</p>
+<p>17 Jul 2010: f90 version of LSMR derived from f90 verion of LSQR
+             and Matlab version lsmr.m.
+             Separate modules are used for LSMR, example test problems,
+             and Check routines for A and x.</p>
+<div class="codehilite"><pre><span></span><code><span class="w">         </span><span class="nx">LSMR</span><span class="w"> </span><span class="nx">lives</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nx">lsmrModule</span><span class="p">.</span><span class="nx">f90</span><span class="p">.</span>
+<span class="w">         </span><span class="nx">Aprod1</span><span class="p">,</span><span class="w"> </span><span class="nx">Aprod2</span><span class="w"> </span><span class="p">(</span><span class="nx">matrix</span><span class="o">-</span><span class="nx">vector</span><span class="w"> </span><span class="nx">product</span><span class="w"> </span><span class="nx">routines</span><span class="p">)</span><span class="w"> </span><span class="nx">are</span><span class="w"> </span><span class="k">in</span>
+<span class="w">         </span><span class="nx">lsmrTestModule</span><span class="p">.</span><span class="nx">f90</span><span class="p">.</span><span class="w">  </span><span class="nx">This</span><span class="w"> </span><span class="nx">module</span><span class="w"> </span><span class="nx">illustrates</span><span class="w"> </span><span class="nx">how</span>
+<span class="w">         </span><span class="nx">problem</span><span class="o">-</span><span class="nx">specific</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="nx">can</span><span class="w"> </span><span class="nx">be</span><span class="w"> </span><span class="nx">created</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">Aprod1</span><span class="p">,</span><span class="w"> </span><span class="nx">Aprod2</span>
+<span class="w">         </span><span class="nx">even</span><span class="w"> </span><span class="nx">though</span><span class="w"> </span><span class="nx">LSMR</span><span class="w"> </span><span class="nx">calls</span><span class="w"> </span><span class="nx">them</span><span class="w"> </span><span class="nx">with</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="nx">simple</span><span class="w"> </span><span class="nx">parameter</span><span class="w"> </span><span class="nx">list</span><span class="p">.</span>
+</code></pre></div>
+
+<p>17 Jul 2010: 3 of the 18 test problems request local reorthogonalization
+             (localSize = 10).  These 3 tests currently fail.
+07 Sep 2010: Local reorthogonalization now works (localSize &gt; 0).
+26 Oct 2012: lsmrTestProgram outputs helpful info to the screen.</p>
+<p>Maintained by
+ David Fong       <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#100;&#97;&#118;&#105;&#100;&#51;&#46;&#49;&#52;&#49;&#53;&#57;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#100;&#97;&#118;&#105;&#100;&#51;&#46;&#49;&#52;&#49;&#53;&#57;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a>
+ Michael Saunders <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#97;&#117;&#110;&#100;&#101;&#114;&#115;&#64;&#115;&#116;&#97;&#110;&#102;&#111;&#114;&#100;&#46;&#101;&#100;&#117;">&#115;&#97;&#117;&#110;&#100;&#101;&#114;&#115;&#64;&#115;&#116;&#97;&#110;&#102;&#111;&#114;&#100;&#46;&#101;&#100;&#117;</a>
+ Systems Optimization Laboratory (SOL)
+ Stanford University
+ Stanford, CA 94305-4026, USA</p>
+<hr>
+<p>LSMR (f90 version) involves the following files:</p>
+<p>lsmrblas.f90         (not needed if Level 1 BLAS are available)
+   lsmrblasInterface.f90
+   lsmrCheckModule.f90
+   lsmrDataModule.f90
+   lsmrModule.f90
+   lsmrTestModule.f90
+   lsmrTestProgram.f90
+   LSMR.txt             (example output file from an Intel Xeon system
+                         compiled with gfortran -O on Linux Debian Elive)
+   Makefile
+   README</p>
+<p>To compile the code and run the test program on Linux or Unix,
+proceed as follows:</p>
+<p>make                 (creates executable TestProgram)
+   ./TestProgram
+   grep appears LSMR.txt</p>
+<p>"LSMR  appears to be successful" should occur 20 times.
+"LSMR  appears to have failed" might occur for the most
+ill-conditioned problem, but this is not cause for alarm
+if ||A'r|| is very small (~= 1e-12).</p>
+<h3>See also</h3>
+<ul>
+<li><a href="https://web.stanford.edu/group/SOL/software/lsmr/">LSMR: Sparse Equations and Least Squares</a> -- LSMR original code.</li>
+<li><a href="https://github.com/ralna/spral">Sparse Parallel Robust Algorithms Library</a> -- another version</li>
+</ul>
+        </div>
+          <div class="col-md-4">
+	        <div class="card card-body bg-light">
+              <h2 class="card-title">Developer Info</h2>
+              <h4 class="card-text">Jacob Williams</h4>
+              <p class="card-text"></p>
+                <div class="text-center"><div class="btn-group" role="group">
+                      <a class="btn btn-lg btn-primary" href="https://github.com/jacobwilliams"><i class="fa fa-github fa-lg"></i></a>
+                </div></div>
+            </div>
+          </div>
+      </div>
+        <div class="row">
+          <hr>
+          <div class="col-xs-6 col-sm-4">
+            <div>
+              <h3>Source Files</h3>
+              <ul><li><a href='sourcefile/lsmrblas.f90.html'>lsmrblas.F90</a></li><li><a href='sourcefile/lsmrdatamodule.f90.html'>lsmrDataModule.F90</a></li><li><a href='sourcefile/lsmrmodule.f90.html'>lsmrModule.f90</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/files.html"><em>All source files&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-4">
+            <div>
+              <h3>Modules</h3>
+              <ul><li><a href='module/lsmrblas.html'>lsmrblas</a></li><li><a href='module/lsmrdatamodule.html'>lsmrDataModule</a></li><li><a href='module/lsmrmodule.html'>lsmrModule</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/modules.html"><em>All modules&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-4">
+            <div>
+              <h3>Procedures</h3>
+              <ul><li><a href='proc/dcopy.html'>dcopy</a></li><li><a href='proc/ddot.html'>ddot</a></li><li><a href='proc/dnrm2.html'>dnrm2</a></li><li><a href='proc/dscal.html'>dscal</a></li><li><a href='proc/lsmr.html'>lsmr</a></li><li><a href='proc/lsmr_ez.html'>lsmr_ez</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/procedures.html"><em>All procedures&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col"><p>LSMR was developed by Jacob Williams<br>&copy; 2024 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
+
+    <!-- MathJax JavaScript
+             ================================================== -->
+             <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+          });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+          <script src="./tipuesearch/tipuesearch_content.js"></script>
+          <script src="./tipuesearch/tipuesearch_set.js"></script>
+          <script src="./tipuesearch/tipuesearch.js"></script>
+
+  </body>
+</html>
