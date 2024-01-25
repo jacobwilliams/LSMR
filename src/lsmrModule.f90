@@ -26,6 +26,7 @@ module lsmrModule
   private
 
   public :: lsmr
+  public :: lsmr_ez
 
   abstract interface
    subroutine Aprod1_f(m,n,x,y)
@@ -731,5 +732,97 @@ contains
     end subroutine localVOrtho
 
   end subroutine lsmr
+
+!*****************************************************************************
+!>
+!  Easy interface to [[lsmr]].
+!
+!  Instead of specifying the `Aprod1`, `Aprod2` functions,
+!  the sparsity pattern (`irow`, `icol`) and nonzero elemenets
+!  of `a` are input.
+!
+!### History
+!  * JW : 1/24/2024 : created.
+
+    subroutine lsmr_ez  ( m, n, irow, icol, a, b, damp, &
+                          atol, btol, conlim, itnlim, localSize, nout, &
+                          x, istop, itn, normA, condA, normr, normAr, normx )
+
+    integer,dimension(:),intent(in)   :: irow    !! row indices of nonzero elements of `A`
+    integer,dimension(:),intent(in)   :: icol    !! column indices of nonzero elements of `A`
+    real(dp),dimension(:),intent(in)  :: a       !! nonzero elements of `A`
+    integer(ip), intent(in)  :: m, n, itnlim, localSize, nout
+    integer(ip), intent(out) :: istop, itn
+    real(dp),    intent(in)  :: b(m)
+    real(dp),    intent(out) :: x(n)
+    real(dp),    intent(in)  :: atol, btol, conlim, damp
+    real(dp),    intent(out) :: normA, condA, normr, normAr, normx
+
+    integer(ip) :: num_nonzero_elements !! number of nonzero elements in the matrix
+    real(dp),dimension(:),allocatable :: Ax, Aty !! temp arrays
+
+    if (size(irow) == size(icol) .and. size(irow) == size(a)) then
+
+        num_nonzero_elements = size(irow)
+        allocate(Ax(m))
+        allocate(Aty(n))
+
+        call lsmr( m, n, Aprod1_ez, Aprod2_ez, b, damp, &
+                   atol, btol, conlim, itnlim, localSize, nout, &
+                   x, istop, itn, normA, condA, normr, normAr, normx )
+
+    else
+        error stop 'inconsistent sizes of input arrays irow, icol, a'
+    end if
+
+    contains
+
+        ! see code from LSQR
+
+        subroutine Aprod1_ez(m,n,x,y)
+            !! y := y + A*x
+            integer(ip), intent(in)    :: m, n
+            real(dp),    intent(in)    :: x(n)
+            real(dp),    intent(inout) :: y(m)
+
+            integer(ip) :: i !! counter
+            integer(ip) :: r !! row index
+            integer(ip) :: c !! column index
+
+            ! A*x:
+            Ax = 0.0_dp
+            do i = 1, num_nonzero_elements
+                r = irow(i)
+                c = icol(i)
+                Ax(r) = Ax(r) + a(i)*x(c)
+            end do
+
+            y = y + Ax
+
+        end subroutine Aprod1_ez
+
+        subroutine Aprod2_ez(m,n,x,y)
+            !! x := x + A'*y
+            integer(ip), intent(in)    :: m, n
+            real(dp),    intent(inout) :: x(n)
+            real(dp),    intent(in)    :: y(m)
+
+            integer(ip) :: i !! counter
+            integer(ip) :: r !! row index
+            integer(ip) :: c !! column index
+
+            Aty = 0.0_dp
+            do i = 1, num_nonzero_elements
+                r = irow(i)
+                c = icol(i)
+                Aty(c) = Aty(c) + a(i)*y(r)
+            end do
+
+            x = x + Aty
+
+        end subroutine Aprod2_ez
+
+    end subroutine lsmr_ez
+!*****************************************************************************
 
 end module LSMRmodule
