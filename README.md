@@ -68,6 +68,9 @@ proceed as follows:
 ill-conditioned problem, but this is not cause for alarm
 if ||A'r|| is very small (~= 1e-12).
 
+### Documentation
+
+The latest API documentation can be found [here](https://jacobwilliams.github.io/LSMR/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford).
 
 ### See also
  * [LSMR: Sparse Equations and Least Squares](https://web.stanford.edu/group/SOL/software/lsmr/) -- LSMR original code.
