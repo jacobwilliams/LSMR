@@ -42,3 +42,4 @@ The latest API documentation can be found [here](https://jacobwilliams.github.io
  * [Sparse Parallel Robust Algorithms Library](https://github.com/ralna/spral) -- another version
  * [LSQR](https://github.com/jacobwilliams/LSQR)
  * [LUSOL](https://github.com/jacobwilliams/lusol)
+ * [nlesolver-fortran](https://github.com/jacobwilliams/nlesolver-fortran)
