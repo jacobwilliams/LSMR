@@ -1,3 +1,6 @@
+![LSMR](media/logo.png)
+============
+
 LSMR: Sparse Equations and Least Squares.
 
 This is a slightly modernized version of the original FSMR (f90 version) by David Fong & Michael Saunders, Systems Optimization Laboratory (SOL), Stanford University, Stanford, CA 94305-4026, USA.
